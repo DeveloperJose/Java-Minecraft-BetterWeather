@@ -1,0 +1,14 @@
+# How many seconds between hail damage hits
+hail-effect-seconds: 5
+
+# How many seconds between wind pushes
+wind-effect-seconds: 1
+
+# Weather changes are normally random, so set a minimum amount of seconds
+# and a maximum amount of seconds before the weather changes
+# Default Minecraft weather is in the range [min=300, max=900]
+weather-change-min-seconds: 5
+weather-change-max-seconds: 10
+
+# Should the debug messages be displayed in the log and chat?
+debug: true
