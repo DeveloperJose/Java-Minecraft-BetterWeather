@@ -1,6 +1,7 @@
 package io.github.developerjose.betterweather;
 
 import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
+import io.github.developerjose.betterweather.runnable.ParticleRunnable;
 import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.*;
 import org.bukkit.World;
@@ -81,6 +82,8 @@ public class Weather {
         // Get the effect delay from the configuration and create the effect task
         int effectDelay = newType.getConfigEffectDelay(plugin.getConfig());
         new ConstantEffectRunnable(plugin).runTaskTimer(plugin, effectDelay, effectDelay);
+
+        new ParticleRunnable(plugin).runTaskTimer(plugin, 60, 60);
 
         isPluginChangingWeather = false;
     }
