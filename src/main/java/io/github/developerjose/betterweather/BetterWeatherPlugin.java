@@ -47,6 +47,7 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         int durationSeconds = (minSeconds + new Random().nextInt(maxSeconds - minSeconds));
         int durationTicks = durationSeconds * 20;
         weatherChangeRunnable.runTaskLater(this, durationTicks);
+        constantEffectRunnable.runTaskLater(this, durationTicks);
     }
 
     @Override
