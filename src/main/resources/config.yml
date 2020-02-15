@@ -1,22 +1,22 @@
-# Should the debug messages be displayed in the log and chat?
+# Should the debug messages be displayed?
 debug: true
 
 # *** How long each weather should last (seconds) ***
-clear-duration: 10
-hail-duration: 10
-light-rain-duration: 10
-light-wind-duration: 10
-light-windyrain-duration: 10
-heavy-rain-duration: 10
-heavy-wind-duration: 10
-heavy-windyrain-duration: 10
+clear-duration: 60
+hail-duration: 60
+light-rain-duration: 60
+light-wind-duration: 60
+light-windyrain-duration: 60
+heavy-rain-duration: 60
+heavy-wind-duration: 60
+heavy-windyrain-duration: 60
 
 # How many seconds between hail damage hits, wind pushes
-hail-delay: 2
-light-wind-delay: 3
-heavy-wind-delay: 3
-light-windyrain-delay: 3
-heavy-windyrain-delay: 3
+hail-delay: 5
+light-wind-delay: 5
+heavy-wind-delay: 5
+light-windyrain-delay: 5
+heavy-windyrain-delay: 5
 
 # The first weather change will happen randomly after the server loads the plugin
 # Here you can define the range of when the first weather change will happen
