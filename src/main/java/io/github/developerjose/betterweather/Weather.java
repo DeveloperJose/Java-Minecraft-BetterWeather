@@ -39,6 +39,12 @@ public class Weather {
     }
 
     public static void changeWeather(BetterWeatherPlugin plugin, WeatherType newType, WeatherMod newMod, int durationTicks) {
+        // After hail, force the weather to change to heavy rain
+        if (currentType instanceof Hail) {
+            currentType = Weather.RAIN;
+            currentMod = WeatherMod.HEAVY;
+        }
+
         // Update static variables
         isPluginChangingWeather = true;
         currentType = newType;

@@ -55,7 +55,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             // Check if weather is valid
             String rawWeatherName = args.get(0).toLowerCase();
             if (!WEATHER_TYPES.contains(rawWeatherName)) {
-                mPlugin.sendMessage(commandSender, ChatColor.RED + "%s is not a valid weather type.", rawWeatherName);
+                mPlugin.sendPluginMessage(commandSender, ChatColor.RED + "%s is not a valid weather type.", rawWeatherName);
                 return false;
             }
 
@@ -67,7 +67,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             // Get the weather object
             WeatherType newWeather = Weather.weatherFromString(weatherName);
             if (newWeather == null) {
-                mPlugin.sendMessage(commandSender, ChatColor.RED + "An error has occurred while converting %s into a WeatherType.", weatherName);
+                mPlugin.sendPluginMessage(commandSender, ChatColor.RED + "An error has occurred while converting %s into a WeatherType.", weatherName);
                 return false;
             }
 
@@ -83,7 +83,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
                 try {
                     durationTicks = Integer.parseInt(rawDurationSeconds) * 20;
                 } catch (NumberFormatException ex) {
-                    mPlugin.sendMessage(commandSender, ChatColor.RED + "Duration must be an integer");
+                    mPlugin.sendPluginMessage(commandSender, ChatColor.RED + "Duration must be an integer");
                     return false;
                 }
             }
@@ -100,12 +100,12 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
 
     private boolean onReloadCommand(CommandSender sender) {
         mPlugin.reloadConfig();
-        mPlugin.sendMessage(sender, "Reloaded configuration file.");
+        mPlugin.sendPluginMessage(sender, "Reloaded configuration file.");
         return true;
     }
 
     private boolean onHelpCommand(CommandSender sender) {
-        mPlugin.sendMessage(sender, ChatColor.GOLD + "Plugin commands:");
+        mPlugin.sendPluginMessage(sender, ChatColor.GOLD + "Plugin commands:");
         sender.sendMessage(ChatColor.AQUA + "/bweather start <weather> [duration (sec)]\n" +
                 ChatColor.GREEN + "   Starts the specified weather type. If duration is not given, the default is retrieved from the configuration.");
 

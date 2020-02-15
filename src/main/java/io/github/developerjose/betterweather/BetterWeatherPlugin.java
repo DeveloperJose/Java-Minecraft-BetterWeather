@@ -72,7 +72,7 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
             getServer().broadcastMessage(String.format(ChatColor.DARK_AQUA + "[BWeather Debug] " + ChatColor.RESET + message, args));
     }
 
-    public void sendMessage(CommandSender sender, String message, Object... args) {
+    public void sendPluginMessage(CommandSender sender, String message, Object... args) {
         sender.sendMessage(String.format(ChatColor.DARK_AQUA + "[BWeather] " + ChatColor.RESET + message, args));
     }
 }
