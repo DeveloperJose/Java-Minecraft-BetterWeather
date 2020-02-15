@@ -4,17 +4,18 @@ import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
 import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Random;
 
 /**
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
+ *
  * @author DeveloperJose
  */
 public class BetterWeatherPlugin extends JavaPlugin implements Listener {
@@ -46,7 +47,21 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         int durationSeconds = (minSeconds + new Random().nextInt(maxSeconds - minSeconds));
         int durationTicks = durationSeconds * 20;
         weatherChangeRunnable.runTaskLater(this, durationTicks);
-        constantEffectRunnable.runTaskLater(this, durationTicks);
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+
+        int weatherRunID = weatherChangeRunnable.getTaskId();
+        int effectRunID = constantEffectRunnable.getTaskId();
+
+        BukkitScheduler scheduler = getServer().getScheduler();
+        if(scheduler.isCurrentlyRunning(weatherRunID))
+            scheduler.cancelTask(weatherRunID);
+
+        if(scheduler.isCurrentlyRunning(effectRunID))
+            scheduler.cancelTask(effectRunID);
     }
 
     @EventHandler

@@ -10,7 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ConstantEffectRunnable extends BukkitRunnable {
     private JavaPlugin mPlugin;
     private World mWorld;
-    public ConstantEffectRunnable(JavaPlugin plugin){
+
+    public ConstantEffectRunnable(JavaPlugin plugin) {
         mPlugin = plugin;
         mWorld = mPlugin.getServer().getWorlds().get(0);
     }

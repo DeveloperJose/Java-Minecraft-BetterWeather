@@ -3,12 +3,7 @@ package io.github.developerjose.betterweather.runnable;
 import io.github.developerjose.betterweather.BetterWeatherPlugin;
 import io.github.developerjose.betterweather.Weather;
 import io.github.developerjose.betterweather.WeatherMod;
-import io.github.developerjose.betterweather.weathers.Hail;
-import io.github.developerjose.betterweather.weathers.Rain;
-import io.github.developerjose.betterweather.weathers.Clear;
 import io.github.developerjose.betterweather.WeatherType;
-import io.github.developerjose.betterweather.weathers.Wind;
-import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -16,11 +11,9 @@ import java.util.Random;
 
 public class WeatherChangeRunnable extends BukkitRunnable {
     private JavaPlugin mPlugin;
-    private World mWorld;
 
     public WeatherChangeRunnable(JavaPlugin plugin) {
         mPlugin = plugin;
-        mWorld = mPlugin.getServer().getWorlds().get(0);
     }
 
     public void run() {
@@ -29,7 +22,7 @@ public class WeatherChangeRunnable extends BukkitRunnable {
         WeatherMod newMod = getRandomElementFromArray(WeatherMod.values());
 
         // Change the weather
-        Weather.changeWeather(mPlugin, mWorld, newWeather, newMod);
+        Weather.changeWeather(mPlugin, newWeather, newMod);
 
         // Repeat task to pick new weather once this one finishes
         WeatherChangeRunnable newRun = new WeatherChangeRunnable(mPlugin);
@@ -39,12 +32,16 @@ public class WeatherChangeRunnable extends BukkitRunnable {
         log("** Random Weather Change **");
         log("Weather Duration (Ticks): %s", Weather.currentDuration);
         log("Weather Duration (Seconds): %s", Weather.currentDuration / 20);
+        log("Weather Duration (Minutes): %s", Weather.currentDuration / 20 / 60);
         log("Weather Type: %s %s", Weather.currentMod, Weather.currentType);
+        log("Weather Config Duration: %s", newWeather.getConfigWeatherDuration(mPlugin.getConfig()));
+        log("Weather Config Effect Delay: %s", newWeather.getConfigEffectDelay(mPlugin.getConfig()));
+        log("Weather Config Prefix: %s", newWeather.getConfigPrefix(mPlugin.getConfig()));
     }
 
     private void log(String message, Object... args) {
         if (mPlugin.getConfig().getBoolean("debug")) {
-            mPlugin.getLogger().info(String.format("[BetterWeather]" + message, args));
+//            mPlugin.getLogger().info(String.format("[BetterWeather]" + message, args));
             mPlugin.getServer().broadcastMessage(String.format("[BetterWeather]" + message, args));
         }
     }

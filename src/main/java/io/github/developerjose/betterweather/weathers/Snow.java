@@ -9,14 +9,15 @@ import org.bukkit.potion.PotionEffectType;
 public class Snow extends Rain {
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
-        if (Weather.currentMod == WeatherMod.LIGHT){
+        if (Weather.currentMod == WeatherMod.LIGHT) {
             p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.WEAKNESS, 2));
             p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 1));
-        }
-        else{
+        } else {
             p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.WEAKNESS, 4));
             p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 2));
         }
+
+        p.sendMessage("Because of your biome, the rain transforms into snow weather.");
     }
 
     @Override

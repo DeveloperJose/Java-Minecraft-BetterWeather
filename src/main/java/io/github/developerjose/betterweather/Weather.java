@@ -2,6 +2,7 @@ package io.github.developerjose.betterweather;
 
 import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
 import io.github.developerjose.betterweather.weathers.*;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
@@ -9,8 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-
-import java.util.Random;
 
 public class Weather {
     public static WeatherType CLEAR = new Clear();
@@ -27,14 +26,14 @@ public class Weather {
 
     public static Vector windDirection = new Vector(0, 0, 0);
 
-    public static WeatherType weatherFromString(String weatherName){
+    public static WeatherType weatherFromString(String weatherName) {
         for (WeatherType w : Weather.ALL_TYPES)
             if (w.toString().equalsIgnoreCase(weatherName))
                 return w;
         return null;
     }
 
-    public static void changeWeather(JavaPlugin plugin, WeatherType newType, WeatherMod newMod){
+    public static void changeWeather(JavaPlugin plugin, WeatherType newType, WeatherMod newMod) {
         changeWeather(plugin, newType, newMod, newType.getConfigWeatherDuration(plugin.getConfig()));
     }
 
@@ -61,16 +60,18 @@ public class Weather {
         // Set wind direction
         windDirection = Vector.getRandom();
         windDirection = windDirection.setY(0);
-        windDirection = windDirection.normalize();
-        windDirection = windDirection.multiply(0.3f);
+        windDirection.normalize();
+        windDirection.multiply(0.01f);
 
-        // Cancel the previous constant effect runnable
+        // Cancel the previous constant effect runnable (if it's running)
         int taskID = BetterWeatherPlugin.constantEffectRunnable.getTaskId();
-        plugin.getServer().getScheduler().cancelTask(taskID);
+        if (plugin.getServer().getScheduler().isCurrentlyRunning(taskID))
+            plugin.getServer().getScheduler().cancelTask(taskID);
 
-        // Get the new constant effect tick timer
+        // Get the effect delay from the configuration
         int effectDelay = newType.getConfigEffectDelay(plugin.getConfig());
 
+        // Schedule the effect with this delay
         ConstantEffectRunnable newRun = new ConstantEffectRunnable(plugin);
         BetterWeatherPlugin.constantEffectRunnable = newRun;
         newRun.runTaskTimer(plugin, 0, effectDelay);

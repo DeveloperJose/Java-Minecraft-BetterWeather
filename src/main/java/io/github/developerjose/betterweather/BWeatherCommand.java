@@ -1,7 +1,6 @@
 package io.github.developerjose.betterweather;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,10 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BWeatherCommand implements CommandExecutor, TabCompleter {
+    private static final List<String> COMMANDS = ImmutableList.of("start", "clear", "modifier");
     private static final List<String> WEATHER_TYPES = ImmutableList.of(
             "clear", "hail", "light-rain", "light-wind", "light-windyrain", "heavy-rain", "heavy-wind", "heavy-windyrain");
-
-    private static final List<String> COMMANDS = ImmutableList.of("start", "clear", "modifier");
 
     private JavaPlugin mPlugin;
 
@@ -55,7 +53,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
 
             // Split the name and mod if neccesary
             String weatherName = rawWeatherName;
-            if(weatherName.contains("-"))
+            if (weatherName.contains("-"))
                 weatherName = weatherName.substring(weatherName.indexOf("-"));
 
             WeatherMod newMod = WeatherMod.LIGHT;
@@ -82,6 +80,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
         }
         return false;
     }
+
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(args, "Arguments cannot be null");

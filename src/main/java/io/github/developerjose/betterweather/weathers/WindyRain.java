@@ -2,7 +2,6 @@ package io.github.developerjose.betterweather.weathers;
 
 import io.github.developerjose.betterweather.Weather;
 import io.github.developerjose.betterweather.WeatherMod;
-import io.github.developerjose.betterweather.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
