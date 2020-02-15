@@ -1,6 +1,7 @@
 package io.github.developerjose.betterweather;
 
 import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
+import io.github.developerjose.betterweather.runnable.ParticleRunnable;
 import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.ChatColor;
@@ -43,6 +44,10 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         int durationSeconds = (minSeconds + new Random().nextInt(maxSeconds - minSeconds));
         int durationTicks = durationSeconds * 20;
         new WeatherChangeRunnable(this).runTaskLater(this, durationTicks);
+
+        // Start the custom particle effects runnable
+        // Run after 5 seconds, every 5 seconds
+        // new ParticleRunnable(this).runTaskTimer(this, 100, 100);
     }
 
     @EventHandler

@@ -18,7 +18,7 @@ public class Rain extends WeatherType {
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
         if (b == Biome.ICE_SPIKES)
-            Weather.SNOW.initialPlayerEffect(p, b);
+            initialSnowEffect(p);
         else
             initialRainEffect(p);
     }
@@ -32,10 +32,17 @@ public class Rain extends WeatherType {
         }
     }
 
-    @Override
-    public void constantPlayerEffect(Player p, Biome b) {
-        if (b == Biome.ICE_SPIKES)
-            Weather.SNOW.constantPlayerEffect(p, b);
+    private void initialSnowEffect(Player p) {
+        if (Weather.currentMod == WeatherMod.LIGHT) {
+            p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.WEAKNESS, 2));
+            p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 1));
+        } else {
+            p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.WEAKNESS, 4));
+            p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 2));
+        }
+
+        p.sendMessage("Because of your biome, the rainy weather transforms into snowy weather.");
+
     }
 
     @Override

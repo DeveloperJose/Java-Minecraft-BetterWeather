@@ -14,7 +14,6 @@ import org.bukkit.util.Vector;
 public class Weather {
     public static WeatherType CLEAR = new Clear();
     public static WeatherType RAIN = new Rain();
-    public static WeatherType SNOW = new Snow();
     public static WeatherType WIND = new Wind();
     public static WeatherType WINDYRAIN = new WindyRain();
     public static WeatherType HAIL = new Hail();
