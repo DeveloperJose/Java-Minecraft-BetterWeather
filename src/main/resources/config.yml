@@ -14,7 +14,9 @@ heavy-windyrain-duration: 10
 # How many seconds between hail damage hits, wind pushes
 hail-delay: 2
 light-wind-delay: 3
-heavy-wind-delay: 1
+heavy-wind-delay: 3
+light-windyrain-delay: 3
+heavy-windyrain-delay: 3
 
 # The first weather change will happen randomly after the server loads the plugin
 # Here you can define the range of when the first weather change will happen

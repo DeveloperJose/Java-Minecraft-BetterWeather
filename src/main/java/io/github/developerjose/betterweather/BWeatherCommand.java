@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BWeatherCommand implements CommandExecutor, TabCompleter {
-    private static final List<String> COMMANDS = ImmutableList.of("start", "clear", "modifier");
+    private static final List<String> COMMANDS = ImmutableList.of("start", "clear");
     private static final List<String> WEATHER_TYPES = ImmutableList.of(
             "clear", "hail", "light-rain", "light-wind", "light-windyrain", "heavy-rain", "heavy-wind", "heavy-windyrain");
 
@@ -56,6 +56,8 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             if (weatherName.contains("-"))
                 weatherName = weatherName.substring(weatherName.indexOf("-"));
 
+            mPlugin.getLogger().info("Weather Name: " + weatherName);
+
             WeatherMod newMod = WeatherMod.LIGHT;
             if (rawWeatherName.contains("heavy"))
                 newMod = WeatherMod.HEAVY;
@@ -77,6 +79,10 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
 
             // Change the weather
             Weather.changeWeather(mPlugin, newWeather, newMod, durationTicks);
+
+            String broadcastMessage = String.format("Weather changed to %s for %s seconds (%s minutes)", rawWeatherName, durationTicks * 20, durationTicks * 20 / 60);
+            Command.broadcastCommandMessage(commandSender, broadcastMessage);
+            return true;
         }
         return false;
     }
@@ -91,10 +97,13 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             return StringUtil.copyPartialMatches(args[0], COMMANDS, new ArrayList<String>(COMMANDS.size()));
 
         // Hint the arguments depending on the command
-        if (args.length == 2) {
+        if (args.length >= 2) {
             String strCommand = args[0];
-            if (strCommand.equalsIgnoreCase("start"))
+            if (strCommand.equalsIgnoreCase("start") && args.length == 2)
                 return StringUtil.copyPartialMatches(args[1], WEATHER_TYPES, new ArrayList<String>(WEATHER_TYPES.size()));
+
+            if(args.length == 3)
+                return ImmutableList.of("[duration]");
         }
 
         return ImmutableList.of();

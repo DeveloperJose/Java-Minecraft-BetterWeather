@@ -35,7 +35,8 @@ public class WeatherChangeRunnable extends BukkitRunnable {
         log("Weather Duration (Minutes): %s", Weather.currentDuration / 20 / 60);
         log("Weather Type: %s %s", Weather.currentMod, Weather.currentType);
         log("Weather Config Duration: %s", newWeather.getConfigWeatherDuration(mPlugin.getConfig()));
-        log("Weather Config Effect Delay: %s", newWeather.getConfigEffectDelay(mPlugin.getConfig()));
+        log("Weather Config Effect Delay: %s ticks", newWeather.getConfigEffectDelay(mPlugin.getConfig()));
+        log("Weather Config Effect Delay: %s seconds", newWeather.getConfigEffectDelay(mPlugin.getConfig()) / 20);
         log("Weather Config Prefix: %s", newWeather.getConfigPrefix(mPlugin.getConfig()));
     }
 
