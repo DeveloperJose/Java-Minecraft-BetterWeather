@@ -54,7 +54,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             // Split the name and mod if neccesary
             String weatherName = rawWeatherName;
             if (weatherName.contains("-"))
-                weatherName = weatherName.substring(weatherName.indexOf("-"));
+                weatherName = weatherName.substring(weatherName.indexOf("-")+1);
 
             mPlugin.getLogger().info("Weather Name: " + weatherName);
 
@@ -80,7 +80,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             // Change the weather
             Weather.changeWeather(mPlugin, newWeather, newMod, durationTicks);
 
-            String broadcastMessage = String.format("Weather changed to %s for %s seconds (%s minutes)", rawWeatherName, durationTicks * 20, durationTicks * 20 / 60);
+            String broadcastMessage = String.format("Weather changed to %s for %s seconds (%s minutes)", rawWeatherName, durationTicks / 20, durationTicks / 20 / 60);
             Command.broadcastCommandMessage(commandSender, broadcastMessage);
             return true;
         }
