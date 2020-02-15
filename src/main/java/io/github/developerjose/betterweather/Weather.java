@@ -1,14 +1,14 @@
 package io.github.developerjose.betterweather;
 
 import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
+import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.*;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
 public class Weather {
@@ -20,6 +20,7 @@ public class Weather {
     public static WeatherType HAIL = new Hail();
     public static final WeatherType[] ALL_TYPES = new WeatherType[]{CLEAR, RAIN, WIND, WINDYRAIN, HAIL};
 
+    public static boolean isPluginChangingWeather = false;
     public static int currentDuration = 0;
     public static WeatherType currentType = CLEAR;
     public static WeatherMod currentMod = WeatherMod.LIGHT;
@@ -33,15 +34,20 @@ public class Weather {
         return null;
     }
 
-    public static void changeWeather(JavaPlugin plugin, WeatherType newType, WeatherMod newMod) {
+    public static void changeWeather(BetterWeatherPlugin plugin, WeatherType newType, WeatherMod newMod) {
         changeWeather(plugin, newType, newMod, newType.getConfigWeatherDuration(plugin.getConfig()));
     }
 
-    public static void changeWeather(JavaPlugin plugin, WeatherType newType, WeatherMod newMod, int durationTicks) {
+    public static void changeWeather(BetterWeatherPlugin plugin, WeatherType newType, WeatherMod newMod, int durationTicks) {
         // Update static variables
+        isPluginChangingWeather = true;
         currentType = newType;
         currentMod = newMod;
         currentDuration = durationTicks;
+
+        // Cancel all previous tasks
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        scheduler.cancelTasks(plugin);
 
         // Set weather duration
         World w = plugin.getServer().getWorlds().get(0);
@@ -58,23 +64,20 @@ public class Weather {
         }
 
         // Set wind direction
+        double windFactor = plugin.getConfig().getDouble("wind-push-factor");
         windDirection = Vector.getRandom();
         windDirection = windDirection.setY(0);
         windDirection.normalize();
-        windDirection.multiply(0.01f);
+        windDirection.multiply(windFactor);
 
-        // Cancel the previous constant effect runnable (if it's running)
-        int taskID = BetterWeatherPlugin.constantEffectRunnable.getTaskId();
-        if (plugin.getServer().getScheduler().isCurrentlyRunning(taskID))
-            plugin.getServer().getScheduler().cancelTask(taskID);
+        // Repeat task to pick new weather once this one finishes
+        new WeatherChangeRunnable(plugin).runTaskLater(plugin, Weather.currentDuration);
 
-        // Get the effect delay from the configuration
+        // Get the effect delay from the configuration and create the effect task
         int effectDelay = newType.getConfigEffectDelay(plugin.getConfig());
+        new ConstantEffectRunnable(plugin).runTaskTimer(plugin, effectDelay, effectDelay);
 
-        // Schedule the effect with this delay
-        ConstantEffectRunnable newRun = new ConstantEffectRunnable(plugin);
-        BetterWeatherPlugin.constantEffectRunnable = newRun;
-        newRun.runTaskTimer(plugin, 0, effectDelay);
+        isPluginChangingWeather = false;
     }
 
     public static PotionEffect makePotionEffect(PotionEffectType t, int level) {

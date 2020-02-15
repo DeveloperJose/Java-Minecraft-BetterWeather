@@ -22,7 +22,6 @@ public class Wind extends WeatherType {
 
     @Override
     public void constantPlayerEffect(Player p, Biome b) {
-
         Vector velocity = p.getVelocity();
         p.setVelocity(velocity.add(Weather.windDirection));
         p.playSound(p.getLocation(), Sound.BLOCK_PUMPKIN_CARVE, 0.5f, 0.5f);

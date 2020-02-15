@@ -1,7 +1,11 @@
 # Should the debug messages be displayed?
 debug: true
 
-# *** How long each weather should last (seconds) ***
+# Message to show when the player is killed by hail
+# PLAYER (all caps) will be replaced with the player name
+hail-death-message: "&fPLAYER has been killed by &7Hail"
+
+# How long each weather should last (seconds)
 clear-duration: 60
 hail-duration: 60
 light-rain-duration: 60
@@ -11,12 +15,15 @@ heavy-rain-duration: 60
 heavy-wind-duration: 60
 heavy-windyrain-duration: 60
 
-# How many seconds between hail damage hits, wind pushes
+# How many seconds between hail damage hits and wind pushes
 hail-delay: 5
-light-wind-delay: 5
+light-wind-delay: 1
 heavy-wind-delay: 5
 light-windyrain-delay: 5
 heavy-windyrain-delay: 5
+
+# How much the wind should push the player. You should try numbers between 0.0 and 1.0
+wind-push-factor: 0.1
 
 # The first weather change will happen randomly after the server loads the plugin
 # Here you can define the range of when the first weather change will happen

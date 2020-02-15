@@ -2,6 +2,7 @@ package io.github.developerjose.betterweather;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,13 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BWeatherCommand implements CommandExecutor, TabCompleter {
-    private static final List<String> COMMANDS = ImmutableList.of("start", "clear");
+    private static final List<String> COMMANDS = ImmutableList.of("start", "clear", "reload", "help");
     private static final List<String> WEATHER_TYPES = ImmutableList.of(
             "clear", "hail", "light-rain", "light-wind", "light-windyrain", "heavy-rain", "heavy-wind", "heavy-windyrain");
 
-    private JavaPlugin mPlugin;
+    private BetterWeatherPlugin mPlugin;
 
-    public BWeatherCommand(JavaPlugin plugin) {
+    public BWeatherCommand(BetterWeatherPlugin plugin) {
         mPlugin = plugin;
     }
 
@@ -38,6 +39,10 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             return onStartCommand(commandSender, argsList);
         else if (strCommand.equalsIgnoreCase("clear"))
             return onStartCommand(commandSender, Arrays.asList(new String[]{"clear"}));
+        else if (strCommand.equalsIgnoreCase("reload"))
+            return onReloadCommand(commandSender);
+        else if (strCommand.equalsIgnoreCase("help"))
+            return onHelpCommand(commandSender);
 
         return false;
     }
@@ -47,23 +52,26 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             // Check if weather is valid
             String rawWeatherName = args.get(0).toLowerCase();
             if (!WEATHER_TYPES.contains(rawWeatherName)) {
-                commandSender.sendMessage("Weather type is invalid");
+                mPlugin.sendMessage(commandSender, ChatColor.RED + "%s is not a valid weather type.", rawWeatherName);
                 return false;
             }
 
             // Split the name and mod if neccesary
             String weatherName = rawWeatherName;
             if (weatherName.contains("-"))
-                weatherName = weatherName.substring(weatherName.indexOf("-")+1);
-
-            mPlugin.getLogger().info("Weather Name: " + weatherName);
-
-            WeatherMod newMod = WeatherMod.LIGHT;
-            if (rawWeatherName.contains("heavy"))
-                newMod = WeatherMod.HEAVY;
+                weatherName = weatherName.substring(weatherName.indexOf("-") + 1);
 
             // Get the weather object
             WeatherType newWeather = Weather.weatherFromString(weatherName);
+            if (newWeather == null) {
+                mPlugin.sendMessage(commandSender, ChatColor.RED + "An error has occurred while converting %s into a WeatherType.", weatherName);
+                return false;
+            }
+
+            // Get the weather modification if needed
+            WeatherMod newMod = WeatherMod.LIGHT;
+            if (rawWeatherName.contains("heavy"))
+                newMod = WeatherMod.HEAVY;
 
             // Get the duration from the arguments if provided, or use the default plugin duration
             int durationTicks = newWeather.getConfigWeatherDuration(mPlugin.getConfig());
@@ -72,7 +80,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
                 try {
                     durationTicks = Integer.parseInt(rawDurationSeconds) * 20;
                 } catch (NumberFormatException ex) {
-                    commandSender.sendMessage("Duration must be an integer.");
+                    mPlugin.sendMessage(commandSender, ChatColor.RED + "Duration must be an integer");
                     return false;
                 }
             }
@@ -85,6 +93,20 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         return false;
+    }
+
+    private boolean onReloadCommand(CommandSender sender) {
+        mPlugin.reloadConfig();
+        mPlugin.sendMessage(sender, "Reloaded configuration file.");
+        return true;
+    }
+
+    private boolean onHelpCommand(CommandSender sender) {
+        mPlugin.sendMessage(sender, "Plugin commands:");
+        mPlugin.sendMessage(sender, ChatColor.AQUA + "/bweather start <weather> [duration (sec)]" + ChatColor.GREEN + "Starts the specified weather type. If duration is not given, the default is retrieved from the configuration.");
+        mPlugin.sendMessage(sender, ChatColor.AQUA + "/bweather clear" + ChatColor.GREEN + "Changes the current weather to clear weather.");
+        mPlugin.sendMessage(sender, ChatColor.AQUA + "/bweather reload" + ChatColor.GREEN + "Reloads the configuration file.");
+        return true;
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -102,8 +124,8 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             if (strCommand.equalsIgnoreCase("start") && args.length == 2)
                 return StringUtil.copyPartialMatches(args[1], WEATHER_TYPES, new ArrayList<String>(WEATHER_TYPES.size()));
 
-            if(args.length == 3)
-                return ImmutableList.of("[duration]");
+            if (args.length == 3)
+                return ImmutableList.of("[duration (sec)]");
         }
 
         return ImmutableList.of();
