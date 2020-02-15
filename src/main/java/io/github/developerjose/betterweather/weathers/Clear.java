@@ -11,6 +11,11 @@ public class Clear extends WeatherType {
     }
 
     @Override
+    public boolean isAffectedByModifiers() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "Clear";
     }

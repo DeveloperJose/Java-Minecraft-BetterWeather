@@ -30,6 +30,6 @@ public class WindyRain extends Wind {
 
     @Override
     public String toString() {
-        return "Windy Rain";
+        return "WindyRain";
     }
 }

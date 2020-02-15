@@ -39,6 +39,11 @@ public class Rain extends WeatherType {
     }
 
     @Override
+    public boolean isAffectedByModifiers() {
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "Rain";
     }

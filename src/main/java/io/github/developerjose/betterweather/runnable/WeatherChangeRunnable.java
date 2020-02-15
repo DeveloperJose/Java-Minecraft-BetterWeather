@@ -15,8 +15,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Random;
 
 public class WeatherChangeRunnable extends BukkitRunnable {
-    private static final int TICKS_PER_SECOND = 20;
-
     private JavaPlugin mPlugin;
     private World mWorld;
 
@@ -26,18 +24,12 @@ public class WeatherChangeRunnable extends BukkitRunnable {
     }
 
     public void run() {
-        // Get a random weather duration
-        int minSeconds = mPlugin.getConfig().getInt("weather-change-min-seconds", 300);
-        int maxSeconds = mPlugin.getConfig().getInt("weather-change-max-seconds", 900);
-        int durationSeconds = (minSeconds + new Random().nextInt(maxSeconds - minSeconds));
-        int durationTicks = durationSeconds * TICKS_PER_SECOND;
-
         // Get a random weather type and modification
-        WeatherType newType = getRandomElementFromArray(Weather.ALL_TYPES);
+        WeatherType newWeather = getRandomElementFromArray(Weather.ALL_TYPES);
         WeatherMod newMod = getRandomElementFromArray(WeatherMod.values());
 
         // Change the weather
-        Weather.changeWeather(mPlugin, mWorld, newType, newMod, durationTicks);
+        Weather.changeWeather(mPlugin, mWorld, newWeather, newMod);
 
         // Repeat task to pick new weather once this one finishes
         WeatherChangeRunnable newRun = new WeatherChangeRunnable(mPlugin);
@@ -46,12 +38,12 @@ public class WeatherChangeRunnable extends BukkitRunnable {
 
         log("** Random Weather Change **");
         log("Weather Duration (Ticks): %s", Weather.currentDuration);
-        log("Weather Duration (Seconds): %s", Weather.currentDuration / TICKS_PER_SECOND);
+        log("Weather Duration (Seconds): %s", Weather.currentDuration / 20);
         log("Weather Type: %s %s", Weather.currentMod, Weather.currentType);
     }
 
     private void log(String message, Object... args) {
-        if (mPlugin.getConfig().getBoolean("debug", false)) {
+        if (mPlugin.getConfig().getBoolean("debug")) {
             mPlugin.getLogger().info(String.format("[BetterWeather]" + message, args));
             mPlugin.getServer().broadcastMessage(String.format("[BetterWeather]" + message, args));
         }

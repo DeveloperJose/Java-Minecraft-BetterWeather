@@ -13,14 +13,14 @@ public class Hail extends WeatherType {
     }
 
     @Override
-    public void initialPlayerEffect(Player p, Biome b) {
-
-    }
-
-    @Override
     public void constantPlayerEffect(Player p, Biome b) {
         p.damage(1);
         p.setLastDamageCause(new EntityDamageEvent(p, EntityDamageEvent.DamageCause.CUSTOM, 1));
+    }
+
+    @Override
+    public boolean isAffectedByModifiers() {
+        return false;
     }
 
     @Override

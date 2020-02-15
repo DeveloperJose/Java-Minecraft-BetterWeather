@@ -11,6 +11,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Random;
+
 /**
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
  * @author DeveloperJose
@@ -29,13 +31,22 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         // Events
         getServer().getPluginManager().registerEvents(this, this);
 
+        // Commands
+        BWeatherCommand bWeatherCommand = new BWeatherCommand(this);
+        getCommand("bweather").setExecutor(bWeatherCommand);
+        getCommand("bweather").setTabCompleter(bWeatherCommand);
+
         // Set-up runnables
         weatherChangeRunnable = new WeatherChangeRunnable(this);
         constantEffectRunnable = new ConstantEffectRunnable(this);
 
-        // Start a weather change immediately
-        weatherChangeRunnable.runTaskLater(this, 0);
-        constantEffectRunnable.runTaskLater(this, 0);
+        // Start a weather change sometime in the future
+        int minSeconds = getConfig().getInt("weather-change-min-seconds");
+        int maxSeconds = getConfig().getInt("weather-change-max-seconds");
+        int durationSeconds = (minSeconds + new Random().nextInt(maxSeconds - minSeconds));
+        int durationTicks = durationSeconds * 20;
+        weatherChangeRunnable.runTaskLater(this, durationTicks);
+        constantEffectRunnable.runTaskLater(this, durationTicks);
     }
 
     @EventHandler

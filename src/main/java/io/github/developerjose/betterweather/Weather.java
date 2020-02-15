@@ -13,7 +13,6 @@ import org.bukkit.util.Vector;
 import java.util.Random;
 
 public class Weather {
-    private static final int TICKS_PER_SECOND = 20;
     public static WeatherType CLEAR = new Clear();
     public static WeatherType RAIN = new Rain();
     public static WeatherType SNOW = new Snow();
@@ -28,10 +27,27 @@ public class Weather {
 
     public static Vector windDirection = new Vector(0, 0, 0);
 
-    public static void changeWeather(JavaPlugin plugin, World w, WeatherType newType, WeatherMod newMod, int newDuration) {
+    public static WeatherType weatherFromString(String weatherName){
+        for (WeatherType w : Weather.ALL_TYPES)
+            if (w.toString().equalsIgnoreCase(weatherName))
+                return w;
+        return null;
+    }
+
+    public static void changeWeather(JavaPlugin plugin, WeatherType newType, WeatherMod newMod){
+        changeWeather(plugin, newType, newMod, newType.getConfigWeatherDuration(plugin.getConfig()));
+    }
+
+    public static void changeWeather(JavaPlugin plugin, WeatherType newType, WeatherMod newMod, int durationTicks) {
+        // Update static variables
+        currentType = newType;
+        currentMod = newMod;
+        currentDuration = durationTicks;
+
         // Set weather duration
-        w.setWeatherDuration(newDuration);
-        w.setThunderDuration(newDuration);
+        World w = plugin.getServer().getWorlds().get(0);
+        w.setWeatherDuration(durationTicks);
+        w.setThunderDuration(durationTicks);
 
         // Run world effect
         newType.worldEffect(w);
@@ -48,25 +64,16 @@ public class Weather {
         windDirection = windDirection.normalize();
         windDirection = windDirection.multiply(0.3f);
 
-        // Update static variables
-        currentType = newType;
-        currentMod = newMod;
-        currentDuration = newDuration;
-
         // Cancel the previous constant effect runnable
         int taskID = BetterWeatherPlugin.constantEffectRunnable.getTaskId();
         plugin.getServer().getScheduler().cancelTask(taskID);
 
         // Get the new constant effect tick timer
-        int effectSeconds = 10;
-        if (newType instanceof Hail)
-            effectSeconds = plugin.getConfig().getInt("hail-effect-seconds", 5);
-        if (newType instanceof Wind)
-            effectSeconds = plugin.getConfig().getInt("wind-effect-seconds", 1);
+        int effectDelay = newType.getConfigEffectDelay(plugin.getConfig());
 
         ConstantEffectRunnable newRun = new ConstantEffectRunnable(plugin);
         BetterWeatherPlugin.constantEffectRunnable = newRun;
-        newRun.runTaskTimer(plugin, 0, effectSeconds * TICKS_PER_SECOND);
+        newRun.runTaskTimer(plugin, 0, effectDelay);
     }
 
     public static PotionEffect makePotionEffect(PotionEffectType t, int level) {
