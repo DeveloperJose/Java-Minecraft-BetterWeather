@@ -45,17 +45,10 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         new WeatherChangeRunnable(this).runTaskLater(this, durationTicks);
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable();
-    }
-
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent ev) {
-        if (!Weather.isPluginChangingWeather) {
-            log("Minecraft is trying to change the weather!");
-            ev.setCancelled(true);
-        }
+        // Cancel the weather change if the plugin isn't the one who is changing it
+        ev.setCancelled(!Weather.isPluginChangingWeather);
     }
 
     @EventHandler
@@ -76,10 +69,10 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
 
     public void log(String message, Object... args) {
         if (getConfig().getBoolean("debug"))
-            getServer().broadcastMessage(String.format(ChatColor.DARK_AQUA + "[BetterWeather]" + ChatColor.GREEN + message, args));
+            getServer().broadcastMessage(String.format(ChatColor.DARK_AQUA + "[BWeather Debug] " + ChatColor.RESET + message, args));
     }
 
     public void sendMessage(CommandSender sender, String message, Object... args) {
-        sender.sendMessage(String.format(ChatColor.DARK_AQUA + "[BetterWeather]" + ChatColor.GREEN + message, args));
+        sender.sendMessage(String.format(ChatColor.DARK_AQUA + "[BWeather] " + ChatColor.RESET + message, args));
     }
 }

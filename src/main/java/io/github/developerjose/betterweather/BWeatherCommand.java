@@ -88,7 +88,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             // Change the weather
             Weather.changeWeather(mPlugin, newWeather, newMod, durationTicks);
 
-            String broadcastMessage = String.format("Weather changed to %s for %s seconds (%s minutes)", rawWeatherName, durationTicks / 20, durationTicks / 20 / 60);
+            String broadcastMessage = String.format("[BWeather] Weather changed to %s for %s sec (%s min)", rawWeatherName, durationTicks / 20, durationTicks / 20 / 60);
             Command.broadcastCommandMessage(commandSender, broadcastMessage);
             return true;
         }
@@ -102,10 +102,15 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
     }
 
     private boolean onHelpCommand(CommandSender sender) {
-        mPlugin.sendMessage(sender, "Plugin commands:");
-        mPlugin.sendMessage(sender, ChatColor.AQUA + "/bweather start <weather> [duration (sec)]" + ChatColor.GREEN + "Starts the specified weather type. If duration is not given, the default is retrieved from the configuration.");
-        mPlugin.sendMessage(sender, ChatColor.AQUA + "/bweather clear" + ChatColor.GREEN + "Changes the current weather to clear weather.");
-        mPlugin.sendMessage(sender, ChatColor.AQUA + "/bweather reload" + ChatColor.GREEN + "Reloads the configuration file.");
+        mPlugin.sendMessage(sender, ChatColor.GOLD + "Plugin commands:");
+        sender.sendMessage(ChatColor.AQUA + "/bweather start <weather> [duration (sec)]\n" +
+                ChatColor.GREEN + "   Starts the specified weather type. If duration is not given, the default is retrieved from the configuration.");
+
+        sender.sendMessage(ChatColor.AQUA + "/bweather clear\n" +
+                ChatColor.GREEN + "   Changes the current weather to clear weather.");
+
+        sender.sendMessage(ChatColor.AQUA + "/bweather reload\n" +
+                ChatColor.GREEN + "   Reloads the configuration file.");
         return true;
     }
 
