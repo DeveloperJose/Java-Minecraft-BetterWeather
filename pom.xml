@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.developerjose</groupId>
-    <artifactId>Java-Paper-Plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>Java-Minecraft-BetterWeather</artifactId>
+    <version>1.0-PRERELEASE</version>
 
     <repositories>
         <repository>

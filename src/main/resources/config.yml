@@ -1,4 +1,4 @@
-# Should the debug messages be displayed?
+# Should the debug messages be send in the chat?
 debug: true
 
 # Message to show when the player is killed by hail
@@ -22,7 +22,7 @@ heavy-wind-delay: 5
 light-windyrain-delay: 5
 heavy-windyrain-delay: 5
 
-# How much the wind should push the player. You should try numbers between 0.0 and 1.0
+# How much the wind should push the player. You should try numbers between 0.00 and 1.00
 wind-push-factor: 0.1
 
 # The first weather change will happen randomly after the server loads the plugin
