@@ -1,9 +1,14 @@
 name: BetterWeather
 main: io.github.developerjose.betterweather.BetterWeatherPlugin
 author: DeveloperJose
-version: 1.0
+version: 1.1
 api-version: 1.13
 commands:
   bweather:
     description: Handles all BetterWeather commands
     usage: /bweather help - To see a list of available commands
+
+permissions:
+  bweather:
+    description: Gives access to all bweather permissions
+    default: op

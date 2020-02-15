@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
@@ -26,6 +25,10 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
     }
 
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
+        // Check permissions and if not allowed, don't say anything
+        if (!commandSender.hasPermission("bweather"))
+            return true;
+
         if (args.length < 1)
             return false;
 
@@ -118,6 +121,10 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
         Validate.notNull(sender, "Sender cannot be null");
         Validate.notNull(args, "Arguments cannot be null");
         Validate.notNull(alias, "Alias cannot be null");
+
+        // Check permissions and if not allowed, don't say anything
+        if (!sender.hasPermission("bweather"))
+            return ImmutableList.of();
 
         // Hint the commands
         if (args.length == 1)
