@@ -1,7 +1,7 @@
 package io.github.developerjose.betterweather.runnable;
 
 import io.github.developerjose.betterweather.BetterWeatherPlugin;
-import io.github.developerjose.betterweather.Weather;
+import io.github.developerjose.betterweather.BWeather;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
@@ -26,7 +26,7 @@ public class ConstantEffectRunnable extends BukkitRunnable {
     public void run() {
         for (Player p : mWorld.getPlayers()) {
             Biome b = p.getLocation().getBlock().getBiome();
-            Weather.currentType.constantPlayerEffect(p, b);
+            BWeather.currentType.constantPlayerEffect(p, b);
         }
 
         mCurrentTicks += 20;

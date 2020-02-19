@@ -1,16 +1,16 @@
-package io.github.developerjose.betterweather;
+package io.github.developerjose.betterweather.weathers;
 
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public class CombinedBWeatherType extends BWeatherType {
+public class BWeatherTypePair extends BWeatherType {
 
     private BWeatherType mWeather1;
     private BWeatherType mWeather2;
 
-    public CombinedBWeatherType(BWeatherType w1, BWeatherType w2) {
+    public BWeatherTypePair(BWeatherType w1, BWeatherType w2) {
         mWeather1 = w1;
         mWeather2 = w2;
     }

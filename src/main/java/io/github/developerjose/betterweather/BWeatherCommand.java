@@ -1,6 +1,7 @@
 package io.github.developerjose.betterweather;
 
 import com.google.common.collect.ImmutableList;
+import io.github.developerjose.betterweather.weathers.BWeatherType;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,8 +16,11 @@ import java.util.List;
 
 public class BWeatherCommand implements CommandExecutor, TabCompleter {
     private static final List<String> COMMANDS = ImmutableList.of("start", "clear", "reload", "help");
-    private static final List<String> WEATHER_TYPES = ImmutableList.of(
-            "clear", "hail", "light-rain", "light-wind", "light-windyrain", "heavy-rain", "heavy-wind", "heavy-windyrain");
+    private static final List<String> WEATHER_TYPES = ImmutableList.of("clear", "hail",
+            "light-rain", "light-wind", "light-snow",
+            "heavy-rain", "heavy-wind", "heavy-snow",
+            "light-wind-light-rain", "heavy-wind-light-rain", "heavy-wind-heavy-rain", "thunderstorm",
+            "light-wind-light-snow", "heavy-wind-heavy-snow", "blizzard");
 
     private BetterWeatherPlugin mPlugin;
 
@@ -59,22 +63,13 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
                 return false;
             }
 
-            // Split the name and mod if neccesary
-            String weatherName = rawWeatherName;
-            if (weatherName.contains("-"))
-                weatherName = weatherName.substring(weatherName.indexOf("-") + 1);
-
+            // Split the name and mod if necessary
             // Get the weather object
-            BWeatherType newWeather = Weather.weatherFromString(weatherName);
+            BWeatherType newWeather = BWeatherType.fromString(rawWeatherName);
             if (newWeather == null) {
-                mPlugin.sendPluginMessage(commandSender, ChatColor.RED + "An error has occurred while converting %s into a WeatherType.", weatherName);
+                mPlugin.sendPluginMessage(commandSender, ChatColor.RED + "An error has occurred while converting %s into a WeatherType.", rawWeatherName);
                 return false;
             }
-
-            // Get the weather modification if needed
-            WeatherMod newMod = WeatherMod.LIGHT;
-            if (rawWeatherName.contains("heavy"))
-                newMod = WeatherMod.HEAVY;
 
             // Get the duration from the arguments if provided, or use the default plugin duration
             int durationTicks = newWeather.getConfigWeatherDuration(mPlugin.getConfig());
@@ -89,13 +84,13 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             }
 
             // Change the weather
-            Weather.changeWeather(mPlugin, newWeather, newMod, durationTicks);
+            BWeather.changeWeather(mPlugin, newWeather, durationTicks);
 
-            String broadcastMessage = String.format("[BWeather] Weather changed to %s for %s sec (%s min)", rawWeatherName, durationTicks / 20, durationTicks / 20 / 60);
-            Command.broadcastCommandMessage(commandSender, broadcastMessage);
+            // String broadcastMessage = String.format("[BWeather] Weather changed to %s for %s sec (%s min)", rawWeatherName, durationTicks / 20, durationTicks / 20 / 60);
+            // Command.broadcastCommandMessage(commandSender, broadcastMessage);
             return true;
         }
-        return false;
+        return true;
     }
 
     private boolean onReloadCommand(CommandSender sender) {

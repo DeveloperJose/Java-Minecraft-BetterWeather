@@ -1,11 +1,8 @@
 package io.github.developerjose.betterweather;
 
-import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
-import io.github.developerjose.betterweather.runnable.ParticleRunnable;
 import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,9 +10,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
-
-import java.util.Random;
 
 /**
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
@@ -48,21 +42,17 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         int durationSeconds = getConfig().getInt("weather-change-delay");
         int durationTicks = durationSeconds * 20;
         new WeatherChangeRunnable(this).runTaskLater(this, durationTicks);
-
-        // Start the custom particle effects runnable
-        // Run after 5 seconds, every 5 seconds
-        // new ParticleRunnable(this).runTaskTimer(this, 100, 100);
     }
 
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent ev) {
         // Cancel the weather change if the plugin isn't the one who is changing it
-        ev.setCancelled(!Weather.isPluginChangingWeather);
+        ev.setCancelled(!BWeather.isPluginChangingWeather);
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent ev) {
-        boolean isHail = Weather.currentType instanceof Hail;
+        boolean isHail = BWeather.currentType instanceof Hail;
         if (!isHail)
             return;
 

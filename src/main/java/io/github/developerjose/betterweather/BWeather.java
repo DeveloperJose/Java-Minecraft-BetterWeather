@@ -1,9 +1,9 @@
 package io.github.developerjose.betterweather;
 
 import io.github.developerjose.betterweather.runnable.ConstantEffectRunnable;
-import io.github.developerjose.betterweather.runnable.ParticleRunnable;
 import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
-import io.github.developerjose.betterweather.weathers.*;
+import io.github.developerjose.betterweather.weathers.BWeatherType;
+import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
@@ -12,9 +12,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
-import static io.github.developerjose.betterweather.BWeatherType.CLEAR;
+import static io.github.developerjose.betterweather.weathers.BWeatherType.CLEAR;
 
-public class Weather {
+public class BWeather {
     public static boolean isPluginChangingWeather = false;
 
     public static BWeatherType currentType = CLEAR;
@@ -28,11 +28,6 @@ public class Weather {
     }
 
     public static void changeWeather(BetterWeatherPlugin plugin, BWeatherType newType, int durationTicks) {
-        // After hail, force the weather to change to one of the hail list
-        if (currentType instanceof Hail) {
-            currentType = Util.getRandomElementFromArray(BWeatherType.AFTER_HAIL);
-        }
-
         // Update static variables
         isPluginChangingWeather = true;
         currentType = newType;
@@ -65,7 +60,14 @@ public class Weather {
 
         // Repeat task to pick new weather once this one finishes and the delay passes
         int changeDelayTicks = plugin.getConfig().getInt("weather-change-delay") * 20;
-        new WeatherChangeRunnable(plugin).runTaskLater(plugin, Weather.currentDuration + changeDelayTicks);
+
+        // After hail, force the weather to change to one of the hail list immediately
+        if (currentType instanceof Hail) {
+            currentType = Util.getRandomElementFromArray(BWeatherType.AFTER_HAIL);
+            changeDelayTicks = 0;
+        }
+
+        new WeatherChangeRunnable(plugin).runTaskLater(plugin, BWeather.currentDuration + changeDelayTicks);
 
         // Get the effect delay from the configuration and create the effect task
         int effectDelay = newType.getConfigEffectDelay(plugin.getConfig());
@@ -73,7 +75,17 @@ public class Weather {
         if (effectDelay > 0)
             new ConstantEffectRunnable(plugin, effectDelay, effectDuration).runTaskTimer(plugin, effectDelay, 20);
 
-        new ParticleRunnable(plugin).runTaskTimer(plugin, 60, 60);
+        // Announce the new weather
+
+        plugin.log("* Weather changed to %s for %s ticks, (%s seconds), (%s minutes)",
+                newType, BWeather.currentDuration, BWeather.currentDuration / 20, BWeather.currentDuration / 20 / 60);
+
+        int effectDelayTicks = newType.getConfigEffectDelay(plugin.getConfig());
+        if (effectDelayTicks > 0) {
+            plugin.log("Effect Delay: %s ticks (%s seconds), (%s minutes)",
+                    effectDelayTicks, effectDelayTicks / 20, effectDelayTicks / 20 / 60);
+            plugin.log("Weather Config Prefix: %s", newType.getConfigPrefix(plugin.getConfig()));
+        }
 
         isPluginChangingWeather = false;
     }

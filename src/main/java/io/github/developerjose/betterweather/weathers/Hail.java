@@ -1,6 +1,5 @@
 package io.github.developerjose.betterweather.weathers;
 
-import io.github.developerjose.betterweather.BWeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;

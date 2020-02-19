@@ -17,9 +17,9 @@ public class ParticleRunnable extends BukkitRunnable {
     public void run() {
         for (Player p : mPlugin.getServer().getWorlds().get(0).getPlayers()) {
             Biome b = p.getLocation().getBlock().getBiome();
-            if (b == Biome.ICE_SPIKES){
+            if (b == Biome.ICE_SPIKES) {
                 Location l = p.getLocation();
-                p.spawnParticle(Particle.CLOUD, l.getX()+0.3, l.getY()+0.3, l.getZ()+0.3, 5);
+                p.spawnParticle(Particle.CLOUD, l.getX() + 0.3, l.getY() + 0.3, l.getZ() + 0.3, 5);
                 p.sendMessage("Affected by chill");
             }
         }
