@@ -1,5 +1,6 @@
 package io.github.developerjose.betterweather.weathers;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -127,7 +128,8 @@ public abstract class BWeatherType {
      */
     public String getConfigBroadcastMessage(FileConfiguration config) {
         String configTag = getConfigPrefix(config) + "-message";
-        return config.getString(configTag);
+        String broadcastMessage = config.getString(configTag);
+        return ChatColor.translateAlternateColorCodes('&', broadcastMessage);
     }
 
     /**
