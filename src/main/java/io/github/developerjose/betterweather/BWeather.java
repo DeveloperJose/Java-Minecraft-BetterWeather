@@ -12,12 +12,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
-import static io.github.developerjose.betterweather.weathers.BWeatherType.CLEAR;
-
 public class BWeather {
     public static boolean isPluginChangingWeather = false;
 
-    public static BWeatherType currentType = CLEAR;
+    public static BWeatherType currentType = BWeatherType.CLEAR;
     public static int currentDuration = 0;
 
     public static Vector windDirection = new Vector(0, 0, 0);
@@ -76,14 +74,19 @@ public class BWeather {
             new ConstantEffectRunnable(plugin, effectDelay, effectDuration).runTaskTimer(plugin, effectDelay, 20);
 
         // Announce the new weather
+        String weatherMessage = newType.getConfigBroadcastMessage(plugin.getConfig());
+        if (weatherMessage.length() > 0)
+            plugin.getServer().broadcastMessage(weatherMessage);
 
-        plugin.log("* Weather changed to %s for %s ticks, (%s seconds), (%s minutes)",
+        // Debug logging of weather change and information
+        plugin.log("Weather changed to %s for %s ticks, (%s sec), (%s min)",
                 newType, BWeather.currentDuration, BWeather.currentDuration / 20, BWeather.currentDuration / 20 / 60);
 
-        int effectDelayTicks = newType.getConfigEffectDelay(plugin.getConfig());
-        if (effectDelayTicks > 0) {
-            plugin.log("Effect Delay: %s ticks (%s seconds), (%s minutes)",
-                    effectDelayTicks, effectDelayTicks / 20, effectDelayTicks / 20 / 60);
+        if (effectDelay > 0) {
+            plugin.log("Effect Delay: %s ticks (%s sec), (%s min)",
+                    effectDelay, effectDelay / 20, effectDelay / 20 / 60);
+            plugin.log("Effect Duration: %s ticks (%s sec), (%s min)",
+                    effectDuration, effectDuration / 20, effectDuration / 20 / 60);
             plugin.log("Weather Config Prefix: %s", newType.getConfigPrefix(plugin.getConfig()));
         }
 
