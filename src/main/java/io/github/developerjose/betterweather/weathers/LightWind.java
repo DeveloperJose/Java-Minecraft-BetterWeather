@@ -1,8 +1,7 @@
 package io.github.developerjose.betterweather.weathers;
 
 import io.github.developerjose.betterweather.Weather;
-import io.github.developerjose.betterweather.WeatherMod;
-import io.github.developerjose.betterweather.WeatherType;
+import io.github.developerjose.betterweather.BWeatherType;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -11,33 +10,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public class Wind extends WeatherType {
+public class LightWind extends BWeatherType {
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
-        if (Weather.currentMod == WeatherMod.LIGHT)
-            p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 1));
-        else
-            p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 3));
+        p.addPotionEffect(Weather.makePotionEffect(PotionEffectType.SLOW, 1));
     }
 
     @Override
     public void constantPlayerEffect(Player p, Biome b) {
         Vector velocity = p.getVelocity();
         p.setVelocity(velocity.add(Weather.windDirection));
-        p.playSound(p.getLocation(), Sound.BLOCK_PUMPKIN_CARVE, 0.5f, 0.5f);
+        p.playSound(p.getLocation(), Sound.ITEM_ELYTRA_FLYING, 0.5f, 0.5f);
 
         Location particleLoc = p.getLocation();
         particleLoc.setY(p.getEyeLocation().getY());
-        p.spawnParticle(Particle.FIREWORKS_SPARK, particleLoc.add(Weather.windDirection), 20);
-    }
-
-    @Override
-    public boolean isAffectedByModifiers() {
-        return true;
+        p.spawnParticle(Particle.SMOKE_NORMAL, particleLoc.add(Weather.windDirection), 20);
     }
 
     @Override
     public String toString() {
-        return "Wind";
+        return "Light-Wind";
     }
 }

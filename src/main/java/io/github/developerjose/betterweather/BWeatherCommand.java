@@ -65,7 +65,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
                 weatherName = weatherName.substring(weatherName.indexOf("-") + 1);
 
             // Get the weather object
-            WeatherType newWeather = Weather.weatherFromString(weatherName);
+            BWeatherType newWeather = Weather.weatherFromString(weatherName);
             if (newWeather == null) {
                 mPlugin.sendPluginMessage(commandSender, ChatColor.RED + "An error has occurred while converting %s into a WeatherType.", weatherName);
                 return false;

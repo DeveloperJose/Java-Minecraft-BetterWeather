@@ -21,6 +21,12 @@ import java.util.Random;
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
  *
  * @author DeveloperJose
+ * TODO: 5 hour interval between weathers
+ * TODO: Wind pushing for multiple seconds
+ * TODO: Broadcast messages from plugin config
+ * TODO: Wind particle must be smoke
+ * TODO: Hail should not damage if under cover
+ * TODO: Test combined weathers
  */
 public class BetterWeatherPlugin extends JavaPlugin implements Listener {
     @Override
@@ -39,9 +45,7 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         getCommand("bweather").setTabCompleter(bWeatherCommand);
 
         // Start a weather change sometime in the future
-        int minSeconds = getConfig().getInt("weather-change-min-seconds");
-        int maxSeconds = getConfig().getInt("weather-change-max-seconds");
-        int durationSeconds = (minSeconds + new Random().nextInt(maxSeconds - minSeconds));
+        int durationSeconds = getConfig().getInt("weather-change-delay");
         int durationTicks = durationSeconds * 20;
         new WeatherChangeRunnable(this).runTaskLater(this, durationTicks);
 

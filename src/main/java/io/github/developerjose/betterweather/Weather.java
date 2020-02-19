@@ -12,43 +12,30 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 
-public class Weather {
-    public static WeatherType CLEAR = new Clear();
-    public static WeatherType RAIN = new Rain();
-    public static WeatherType WIND = new Wind();
-    public static WeatherType WINDYRAIN = new WindyRain();
-    public static WeatherType HAIL = new Hail();
-    public static final WeatherType[] ALL_TYPES = new WeatherType[]{CLEAR, RAIN, WIND, WINDYRAIN, HAIL};
+import static io.github.developerjose.betterweather.BWeatherType.CLEAR;
 
+public class Weather {
     public static boolean isPluginChangingWeather = false;
+
+    public static BWeatherType currentType = CLEAR;
     public static int currentDuration = 0;
-    public static WeatherType currentType = CLEAR;
-    public static WeatherMod currentMod = WeatherMod.LIGHT;
 
     public static Vector windDirection = new Vector(0, 0, 0);
 
-    public static WeatherType weatherFromString(String weatherName) {
-        for (WeatherType w : Weather.ALL_TYPES)
-            if (w.toString().equalsIgnoreCase(weatherName))
-                return w;
-        return null;
+    public static void changeWeather(BetterWeatherPlugin plugin, BWeatherType newType) {
+        int durationTicks = newType.getConfigWeatherDuration(plugin.getConfig());
+        changeWeather(plugin, newType, durationTicks);
     }
 
-    public static void changeWeather(BetterWeatherPlugin plugin, WeatherType newType, WeatherMod newMod) {
-        changeWeather(plugin, newType, newMod, newType.getConfigWeatherDuration(plugin.getConfig()));
-    }
-
-    public static void changeWeather(BetterWeatherPlugin plugin, WeatherType newType, WeatherMod newMod, int durationTicks) {
-        // After hail, force the weather to change to heavy rain
+    public static void changeWeather(BetterWeatherPlugin plugin, BWeatherType newType, int durationTicks) {
+        // After hail, force the weather to change to one of the hail list
         if (currentType instanceof Hail) {
-            currentType = Weather.RAIN;
-            currentMod = WeatherMod.HEAVY;
+            currentType = Util.getRandomElementFromArray(BWeatherType.AFTER_HAIL);
         }
 
         // Update static variables
         isPluginChangingWeather = true;
         currentType = newType;
-        currentMod = newMod;
         currentDuration = durationTicks;
 
         // Cancel all previous tasks
@@ -69,19 +56,22 @@ public class Weather {
             newType.initialPlayerEffect(p, b);
         }
 
-        // Set wind direction
+        // Set wind direction and force
         double windFactor = plugin.getConfig().getDouble("wind-push-factor");
         windDirection = Vector.getRandom();
         windDirection = windDirection.setY(0);
         windDirection.normalize();
         windDirection.multiply(windFactor);
 
-        // Repeat task to pick new weather once this one finishes
-        new WeatherChangeRunnable(plugin).runTaskLater(plugin, Weather.currentDuration);
+        // Repeat task to pick new weather once this one finishes and the delay passes
+        int changeDelayTicks = plugin.getConfig().getInt("weather-change-delay") * 20;
+        new WeatherChangeRunnable(plugin).runTaskLater(plugin, Weather.currentDuration + changeDelayTicks);
 
         // Get the effect delay from the configuration and create the effect task
         int effectDelay = newType.getConfigEffectDelay(plugin.getConfig());
-        new ConstantEffectRunnable(plugin).runTaskTimer(plugin, effectDelay, effectDelay);
+        int effectDuration = newType.getConfigEffectDuration(plugin.getConfig());
+        if (effectDelay > 0)
+            new ConstantEffectRunnable(plugin, effectDelay, effectDuration).runTaskTimer(plugin, effectDelay, 20);
 
         new ParticleRunnable(plugin).runTaskTimer(plugin, 60, 60);
 
@@ -89,6 +79,6 @@ public class Weather {
     }
 
     public static PotionEffect makePotionEffect(PotionEffectType t, int level) {
-        return new PotionEffect(t, currentDuration, level);
+        return new PotionEffect(t, currentDuration - 20, level);
     }
 }
