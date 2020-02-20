@@ -51,7 +51,7 @@ heavy-wind-light-rain-message: "&0[&8&lW&7&lo&f&lW&7&lS&0] &7&oHeavy Rain has be
 heavy-wind-heavy-rain-message: "&0[&8&lW&7&lo&f&lW&7&lS&0] &7&oThunder rumbles overhead… It seems a thunderstorm is rolling in"
 
 light-wind-light-snow-message: "&0[&8&lW&7&lo&f&lW&7&lS&0] &7&oSnow falls from the sky, hitting you in the face"
-heavy-wind-heavy-snow-message: "&0[&8&lW&7&lo&f&lW&7&lS&0] &7&oHeavy Snow is swirling all around, A blizzard is occuring!"
+heavy-wind-heavy-snow-message: "&0[&8&lW&7&lo&f&lW&7&lS&0] &7&oHeavy Snow is swirling all around, A blizzard is occurring!"
 
 # *******************************************************************************
 # ********** How many seconds between hail damage hits and wind pushes **********
@@ -61,6 +61,5 @@ heavy-wind-delay: 20
 
 # ******************************************************************
 # ********** How many seconds to perform the given effect **********
-hail-effect-duration: 1
 light-wind-effect-duration: 3
 heavy-wind-effect-duration: 5

@@ -16,17 +16,6 @@ public class LightWind extends BWeatherType {
     }
 
     @Override
-    public void constantPlayerEffect(Player p, Biome b) {
-        Vector velocity = p.getVelocity();
-        p.setVelocity(velocity.add(BWeather.windDirection));
-        p.playSound(p.getLocation(), Sound.ITEM_ELYTRA_FLYING, 0.5f, 0.5f);
-
-        Location particleLoc = p.getLocation();
-        particleLoc.setY(p.getEyeLocation().getY());
-        p.spawnParticle(Particle.SMOKE_NORMAL, particleLoc.add(BWeather.windDirection), 20);
-    }
-
-    @Override
     public String toString() {
         return "Light-Wind";
     }

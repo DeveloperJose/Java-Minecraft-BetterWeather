@@ -3,22 +3,21 @@ package io.github.developerjose.betterweather;
 import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
  *
  * @author DeveloperJose
- * TODO: 5 hour interval between weathers
- * TODO: Wind pushing for multiple seconds
- * TODO: Broadcast messages from plugin config
- * TODO: Wind particle must be smoke
  * TODO: Hail should not damage if under cover
  * TODO: Test combined weathers
  */
@@ -42,6 +41,21 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         int durationSeconds = getConfig().getInt("weather-change-delay");
         int durationTicks = durationSeconds * 20;
         new WeatherChangeRunnable(this).runTaskLater(this, durationTicks);
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+
+        // Clear weather and effects
+        World w = getServer().getWorlds().get(0);
+        w.setStorm(false);
+        w.setThundering(false);
+
+        for (Player p : w.getPlayers()) {
+            p.removePotionEffect(PotionEffectType.SLOW);
+            p.removePotionEffect(PotionEffectType.WEAKNESS);
+        }
     }
 
     @EventHandler

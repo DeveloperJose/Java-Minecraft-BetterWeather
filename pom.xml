@@ -6,7 +6,7 @@
 
     <groupId>io.github.developerjose</groupId>
     <artifactId>BetterWeather</artifactId>
-    <version>1.1-PRERELEASE</version>
+    <version>1.2</version>
 
     <repositories>
         <repository>

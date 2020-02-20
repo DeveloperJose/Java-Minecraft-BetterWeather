@@ -117,7 +117,7 @@ public abstract class BWeatherType {
      */
     public int getConfigEffectDuration(FileConfiguration config) {
         String configTag = getConfigPrefix(config) + "-effect-duration";
-        return config.getInt(configTag) * 20;
+        return config.getInt(configTag, 0) * 20;
     }
 
     /**

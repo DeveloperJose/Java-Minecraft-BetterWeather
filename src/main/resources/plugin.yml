@@ -1,7 +1,7 @@
 name: BetterWeather
 main: io.github.developerjose.betterweather.BetterWeatherPlugin
 author: DeveloperJose
-version: 1.1
+version: 1.2
 api-version: 1.13
 commands:
   bweather:
