@@ -1,6 +1,6 @@
 package io.github.developerjose.betterweather;
 
-import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
+import io.github.developerjose.betterweather.runnable.RandomWeatherChangeRunnable;
 import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -18,8 +18,6 @@ import org.bukkit.potion.PotionEffectType;
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
  *
  * @author DeveloperJose
- * TODO: Hail should not damage if under cover
- * TODO: Test combined weathers
  */
 public class BetterWeatherPlugin extends JavaPlugin implements Listener {
     @Override
@@ -40,7 +38,7 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
         // Start a weather change sometime in the future
         int durationSeconds = getConfig().getInt("weather-change-delay");
         int durationTicks = durationSeconds * 20;
-        new WeatherChangeRunnable(this).runTaskLater(this, durationTicks);
+        new RandomWeatherChangeRunnable(this).runTaskLater(this, durationTicks);
     }
 
     @Override

@@ -11,17 +11,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
 public class WindRunnable extends BukkitRunnable {
     public static final int TICK_PERIOD = 5;
 
     private BetterWeatherPlugin mPlugin;
+    private Random mRand;
     private World mWorld;
+
     private int mCurrentTicks;
     private int mDelayTicks;
     private int mDurationTicks;
 
     public WindRunnable(BetterWeatherPlugin plugin) {
         mPlugin = plugin;
+        mRand = new Random();
         mWorld = mPlugin.getServer().getWorlds().get(0);
         mCurrentTicks = 0;
 
@@ -48,9 +53,20 @@ public class WindRunnable extends BukkitRunnable {
             p.setVelocity(velocity.add(BWeather.windDirection));
 
             // Spawn particles
-            Location particleLoc = p.getLocation();
+            Location particleLoc = p.getLocation().subtract(BWeather.windDirection);
             particleLoc.setY(p.getEyeLocation().getY());
-            p.spawnParticle(Particle.SMOKE_NORMAL, particleLoc.add(BWeather.windDirection), 20);
+
+            for (int i = 0; i < 5; i++) {
+                double sx = (mRand.nextInt(5) - 3) + mRand.nextDouble();
+                double sz = (mRand.nextInt(5) - 3) + mRand.nextDouble();
+                double sy = (mRand.nextInt(5) - 3) + mRand.nextDouble();
+
+                p.spawnParticle(Particle.CLOUD,
+                        particleLoc.getX() + sx, particleLoc.getY() + sy, particleLoc.getZ() + sz,
+                        0,
+                        BWeather.windDirection.getX(), BWeather.windDirection.getY(), BWeather.windDirection.getZ(),
+                        mRand.nextInt(10)+5);
+            }
 
             // Play or stop sound
             if (isFirst)

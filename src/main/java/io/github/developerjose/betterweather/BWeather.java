@@ -1,7 +1,7 @@
 package io.github.developerjose.betterweather;
 
 import io.github.developerjose.betterweather.runnable.HailRunnable;
-import io.github.developerjose.betterweather.runnable.WeatherChangeRunnable;
+import io.github.developerjose.betterweather.runnable.RandomWeatherChangeRunnable;
 import io.github.developerjose.betterweather.runnable.WindRunnable;
 import io.github.developerjose.betterweather.weathers.BWeatherType;
 import io.github.developerjose.betterweather.weathers.BWeatherTypePair;
@@ -23,19 +23,7 @@ public class BWeather {
 
     public static Vector windDirection = new Vector(0, 0, 0);
 
-    public static void changeWeather(BetterWeatherPlugin plugin, BWeatherType newType) {
-        int durationTicks = newType.getConfigWeatherDuration(plugin.getConfig());
-        changeWeather(plugin, newType, durationTicks);
-    }
-
     public static void changeWeather(BetterWeatherPlugin plugin, BWeatherType newType, int durationTicks) {
-        BWeatherType previousType = currentType;
-
-        // After hail, force the weather to change to one in the hail list
-        if (previousType instanceof Hail) {
-            currentType = Util.getRandomElementFromArray(BWeatherType.AFTER_HAIL);
-        }
-
         // Update static variables
         isPluginChangingWeather = true;
         currentType = newType;
@@ -45,7 +33,7 @@ public class BWeather {
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         scheduler.cancelTasks(plugin);
 
-        // Set weather duration
+        // Set weather duration and clear previous if necessary
         World w = plugin.getServer().getWorlds().get(0);
         w.setThundering(false);
         w.setStorm(false);
@@ -74,21 +62,19 @@ public class BWeather {
         windDirection.normalize();
         windDirection.multiply(windFactor);
 
-        // Create effect if necessary
+        // Create extra effect if necessary
         if (newType instanceof LightWind || newType instanceof BWeatherTypePair)
             new WindRunnable(plugin).runTask();
         else if (newType instanceof Hail)
             new HailRunnable(plugin).runTask();
 
         // Get the delay between weather changes
-        int changeDelayTicks = plugin.getConfig().getInt("weather-change-delay") * 20 + BWeather.currentDuration;
-
-        // After hail, force the weather to change immediately
-        if (previousType instanceof Hail)
-            changeDelayTicks = 0;
+        int changeDelayTicks = durationTicks;
+        if (durationTicks > 0)
+            changeDelayTicks += plugin.getConfig().getInt("weather-change-delay") * 20;
 
         // Repeat task to pick new weather
-        new WeatherChangeRunnable(plugin).runTaskLater(plugin, changeDelayTicks);
+        new RandomWeatherChangeRunnable(plugin).runTaskLater(plugin, changeDelayTicks);
 
         // Announce the new weather
         String weatherMessage = newType.getConfigBroadcastMessage(plugin.getConfig());

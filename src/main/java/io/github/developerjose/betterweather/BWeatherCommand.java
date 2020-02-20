@@ -45,7 +45,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
         if (strCommand.equalsIgnoreCase("start"))
             return onStartCommand(commandSender, argsList);
         else if (strCommand.equalsIgnoreCase("clear"))
-            return onStartCommand(commandSender, Arrays.asList(new String[]{"clear"}));
+            return onStartCommand(commandSender, Arrays.asList("clear"));
         else if (strCommand.equalsIgnoreCase("reload"))
             return onReloadCommand(commandSender);
         else if (strCommand.equalsIgnoreCase("help"))
