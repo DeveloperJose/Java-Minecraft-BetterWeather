@@ -31,6 +31,7 @@ public class WindRunnable extends BukkitRunnable {
     }
 
     public BukkitTask runTask() {
+        mPlugin.log("[Wind]DelayTicks=%s, DurationTicks=%s, Prefix=%s", mDelayTicks, mDurationTicks, BWeather.currentType.getConfigPrefix(mPlugin.getConfig()));
         return runTaskTimer(mPlugin, mDelayTicks, TICK_PERIOD);
     }
 
@@ -59,7 +60,7 @@ public class WindRunnable extends BukkitRunnable {
         }
 
         // Cancel this task and schedule a delayed one after we reach the duration
-        if (mCurrentTicks >= mDurationTicks) {
+        if (isLast) {
             new WindRunnable(mPlugin).runTask();
             this.cancel();
         }

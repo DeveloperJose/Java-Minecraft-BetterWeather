@@ -18,7 +18,7 @@ public class WeatherChangeRunnable extends BukkitRunnable {
         BWeatherType newWeather = Util.getRandomElementFromArray(BWeatherType.ALL_TYPES);
 
         // Change the weather
-        BWeather.changeWeather(mPlugin, newWeather);
+        BWeather.changeWeatherRandom(mPlugin, newWeather);
     }
 
 }
