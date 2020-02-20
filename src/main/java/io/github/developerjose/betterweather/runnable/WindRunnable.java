@@ -12,7 +12,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 public class WindRunnable extends BukkitRunnable {
-    public static final int TICK_PERIOD = 2;
+    public static final int TICK_PERIOD = 5;
 
     private BetterWeatherPlugin mPlugin;
     private World mWorld;

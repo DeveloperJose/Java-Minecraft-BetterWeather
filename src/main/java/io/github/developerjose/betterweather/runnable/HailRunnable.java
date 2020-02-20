@@ -26,8 +26,14 @@ public class HailRunnable extends BukkitRunnable {
 
     public void run() {
         for (Player p : mWorld.getPlayers()) {
-            p.damage(1);
-            p.setLastDamageCause(new EntityDamageEvent(p, EntityDamageEvent.DamageCause.CUSTOM, 1));
+            // Check if player is below cover
+            int blockAbovePlayerY = p.getLocation().getBlockY() + 1;
+            int highestBlockY = mWorld.getHighestBlockYAt(p.getLocation());
+
+            if (blockAbovePlayerY > highestBlockY) {
+                p.damage(1);
+                p.setLastDamageCause(new EntityDamageEvent(p, EntityDamageEvent.DamageCause.CUSTOM, 1));
+            }
         }
     }
 }
