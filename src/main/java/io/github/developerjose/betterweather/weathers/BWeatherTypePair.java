@@ -22,6 +22,9 @@ public class BWeatherTypePair extends BWeatherType {
 
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
+        if (isSnowy() && b != Biome.ICE_SPIKES)
+            return;
+        
         mWeather1.initialPlayerEffect(p, b);
         mWeather2.initialPlayerEffect(p, b);
     }

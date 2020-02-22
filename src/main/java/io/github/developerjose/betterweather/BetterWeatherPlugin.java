@@ -50,7 +50,7 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
 
         for (Player p : w.getPlayers())
             Util.clearPlayerEffects(p);
-        
+
     }
 
     @EventHandler
