@@ -25,7 +25,7 @@
     </dependencies>
 
     <build>
-        <directory>C:\Users\xeroj\Desktop\Local Games\Minecraft\Paper Server\plugins</directory>
+        <directory>C:\Users\xeroj\Downloads\_LocalBackup\Local Games\Minecraft\Paper Server\plugins</directory>
     </build>
 
 </project>

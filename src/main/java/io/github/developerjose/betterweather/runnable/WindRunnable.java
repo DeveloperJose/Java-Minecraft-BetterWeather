@@ -49,7 +49,7 @@ public class WindRunnable extends BukkitRunnable {
         boolean isLast = mCurrentTicks >= mDurationTicks;
 
         for (Player p : mWorld.getPlayers()) {
-            // Don't apply the wind effect for players under cover
+            // Don't apply the wind effect to players under cover
             if (Util.isPlayerUnderBlockCover(p))
                 continue;
 
@@ -70,7 +70,7 @@ public class WindRunnable extends BukkitRunnable {
                         particleLoc.getX() + sx, particleLoc.getY() + sy, particleLoc.getZ() + sz,
                         0,
                         BWeather.windDirection.getX(), BWeather.windDirection.getY(), BWeather.windDirection.getZ(),
-                        mRand.nextInt(10)+5);
+                        mRand.nextInt(10) + 5);
             }
 
             // Play or stop sound
