@@ -1,11 +1,18 @@
 package io.github.developerjose.betterweather.weathers;
 
 import io.github.developerjose.betterweather.BWeatherManager;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 public class HeavySnow extends LightSnow {
+    @Override
+    public void worldEffect(World w) {
+        w.setThundering(true);
+        w.setThunderDuration(BWeatherManager.currentDuration);
+    }
+
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
         if (b == Biome.ICE_SPIKES) {

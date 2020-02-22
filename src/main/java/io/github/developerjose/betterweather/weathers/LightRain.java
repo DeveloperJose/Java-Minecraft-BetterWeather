@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 public class LightRain extends BWeatherType {
-
     @Override
     public void worldEffect(World w) {
         w.setStorm(true);
+        w.setWeatherDuration(BWeatherManager.currentDuration);
     }
 
     @Override

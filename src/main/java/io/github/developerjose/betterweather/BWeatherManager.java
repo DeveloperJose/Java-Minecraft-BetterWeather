@@ -29,7 +29,7 @@ public class BWeatherManager {
         BukkitScheduler scheduler = mPlugin.getServer().getScheduler();
         scheduler.cancelTasks(mPlugin);
 
-        // Set weather duration and clear previous if necessary
+        // Clear previous weather
         World w = mPlugin.getServer().getWorlds().get(0);
         Util.clearWorldEffects(w);
 

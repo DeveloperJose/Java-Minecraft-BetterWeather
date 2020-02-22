@@ -1,14 +1,9 @@
 package io.github.developerjose.betterweather.weathers;
 
-import org.bukkit.World;
-
+/**
+ * BWeatherManager clears the weather automatically, so it's mostly a name holder
+ */
 public class Clear extends BWeatherType {
-    @Override
-    public void worldEffect(World w) {
-        w.setThundering(false);
-        w.setStorm(false);
-    }
-
     @Override
     public String toString() {
         return "Clear";

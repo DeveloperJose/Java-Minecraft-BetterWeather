@@ -1,7 +1,6 @@
 package io.github.developerjose.betterweather;
 
 import org.bukkit.Sound;
-import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
@@ -24,13 +23,11 @@ public class Util {
         p.removePotionEffect(PotionEffectType.SLOW);
         p.removePotionEffect(PotionEffectType.WEAKNESS);
         p.stopSound(Sound.ITEM_ELYTRA_FLYING);
-        p.setPlayerWeather(WeatherType.CLEAR);
+        p.resetPlayerWeather();
     }
 
-    public static void clearWorldEffects(World w){
+    public static void clearWorldEffects(World w) {
         w.setThundering(false);
         w.setStorm(false);
-        w.setWeatherDuration(0);
-        w.setThunderDuration(0);
     }
 }
