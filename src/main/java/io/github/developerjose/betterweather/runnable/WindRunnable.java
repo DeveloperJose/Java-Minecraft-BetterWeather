@@ -84,7 +84,7 @@ public class WindRunnable extends BukkitRunnable {
             // Play or stop sound
             if (isFirst)
                 p.playSound(p.getLocation(), Sound.ITEM_ELYTRA_FLYING, 1f, 2f);
-            if (isLast)
+            else if (isLast)
                 p.stopSound(Sound.ITEM_ELYTRA_FLYING);
         }
 
