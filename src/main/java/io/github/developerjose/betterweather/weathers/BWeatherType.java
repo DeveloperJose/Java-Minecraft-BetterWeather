@@ -26,8 +26,8 @@ public abstract class BWeatherType {
     public static BWeatherType HEAVY_WIND_LIGHT_RAIN = new BWeatherTypePair(HEAVY_WIND, LIGHT_RAIN);
     public static BWeatherType HEAVY_WIND_HEAVY_RAIN = new BWeatherTypePair(HEAVY_WIND, HEAVY_RAIN); // Alias: Thunderstorm
 
-    public static BWeatherType LIGHT_WIND_LIGHT_SNOW = new BWeatherTypePair(LIGHT_WIND, LIGHT_SNOW);
-    public static BWeatherType HEAVY_WIND_HEAVY_SNOW = new BWeatherTypePair(HEAVY_WIND, HEAVY_SNOW); // Alias: Blizzard
+    public static BWeatherType LIGHT_WIND_LIGHT_SNOW = new BWeatherTypePair(LIGHT_WIND, LIGHT_SNOW, Biome.ICE_SPIKES);
+    public static BWeatherType HEAVY_WIND_HEAVY_SNOW = new BWeatherTypePair(HEAVY_WIND, HEAVY_SNOW, Biome.ICE_SPIKES); // Alias: Blizzard
 
     public static final BWeatherType[] ALL_TYPES = new BWeatherType[]{CLEAR, HAIL,
             LIGHT_RAIN, LIGHT_WIND, LIGHT_SNOW,
@@ -73,17 +73,6 @@ public abstract class BWeatherType {
      * @param b Biome the player is in
      */
     public void initialPlayerEffect(Player p, Biome b) {
-
-    }
-
-    /**
-     * Transforms the players according to the weather.
-     * Constantly runs until the weather changes.
-     *
-     * @param p Player to change
-     * @param b Biome the player is in
-     */
-    public void constantPlayerEffect(Player p, Biome b) {
 
     }
 

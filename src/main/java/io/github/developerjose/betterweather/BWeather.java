@@ -7,6 +7,8 @@ import io.github.developerjose.betterweather.weathers.BWeatherType;
 import io.github.developerjose.betterweather.weathers.BWeatherTypePair;
 import io.github.developerjose.betterweather.weathers.Hail;
 import io.github.developerjose.betterweather.weathers.LightWind;
+import org.bukkit.Sound;
+import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
@@ -40,10 +42,12 @@ public class BWeather {
         w.setWeatherDuration(durationTicks);
         w.setThunderDuration(durationTicks);
 
-        // Clear previous effects
+        // Clear previous effects, sounds, and weathers
         for (Player p : w.getPlayers()) {
             p.removePotionEffect(PotionEffectType.SLOW);
             p.removePotionEffect(PotionEffectType.WEAKNESS);
+            p.stopSound(Sound.ITEM_ELYTRA_FLYING);
+            p.setPlayerWeather(WeatherType.CLEAR);
         }
 
         // Run world effect
