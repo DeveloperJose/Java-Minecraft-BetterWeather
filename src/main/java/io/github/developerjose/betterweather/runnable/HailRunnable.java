@@ -2,6 +2,7 @@ package io.github.developerjose.betterweather.runnable;
 
 import io.github.developerjose.betterweather.BWeather;
 import io.github.developerjose.betterweather.BetterWeatherPlugin;
+import io.github.developerjose.betterweather.Util;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -26,14 +27,13 @@ public class HailRunnable extends BukkitRunnable {
 
     public void run() {
         for (Player p : mWorld.getPlayers()) {
-            // Check if player is below cover
-            int blockAbovePlayerY = p.getLocation().getBlockY() + 1;
-            int highestBlockY = mWorld.getHighestBlockYAt(p.getLocation());
+            // Don't damage players under cover
+            if (Util.isPlayerUnderBlockCover(p))
+                continue;
 
-            if (blockAbovePlayerY > highestBlockY) {
-                p.damage(1);
-                p.setLastDamageCause(new EntityDamageEvent(p, EntityDamageEvent.DamageCause.CUSTOM, 1));
-            }
+            p.damage(1);
+            p.setLastDamageCause(new EntityDamageEvent(p, EntityDamageEvent.DamageCause.CUSTOM, 1));
+
         }
     }
 }

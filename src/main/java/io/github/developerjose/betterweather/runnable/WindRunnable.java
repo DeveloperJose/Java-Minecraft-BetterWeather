@@ -2,6 +2,7 @@ package io.github.developerjose.betterweather.runnable;
 
 import io.github.developerjose.betterweather.BWeather;
 import io.github.developerjose.betterweather.BetterWeatherPlugin;
+import io.github.developerjose.betterweather.Util;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -48,6 +49,10 @@ public class WindRunnable extends BukkitRunnable {
         boolean isLast = mCurrentTicks >= mDurationTicks;
 
         for (Player p : mWorld.getPlayers()) {
+            // Don't apply the wind effect for players under cover
+            if (Util.isPlayerUnderBlockCover(p))
+                continue;
+
             // Push player
             Vector velocity = p.getVelocity();
             p.setVelocity(velocity.add(BWeather.windDirection));
