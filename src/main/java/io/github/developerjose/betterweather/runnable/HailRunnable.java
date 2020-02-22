@@ -1,6 +1,6 @@
 package io.github.developerjose.betterweather.runnable;
 
-import io.github.developerjose.betterweather.BWeather;
+import io.github.developerjose.betterweather.BWeatherManager;
 import io.github.developerjose.betterweather.BetterWeatherPlugin;
 import io.github.developerjose.betterweather.Util;
 import org.bukkit.World;
@@ -17,11 +17,11 @@ public class HailRunnable extends BukkitRunnable {
     public HailRunnable(BetterWeatherPlugin plugin) {
         mPlugin = plugin;
         mWorld = plugin.getServer().getWorlds().get(0);
-        mDelayTicks = BWeather.currentType.getConfigEffectDelay(plugin.getConfig());
+        mDelayTicks = BWeatherManager.currentWeatherType.getConfigEffectDelay(plugin.getConfig());
     }
 
     public BukkitTask runTask() {
-        mPlugin.log("DelayTicks: %s, %s", mDelayTicks, BWeather.currentType.getConfigPrefix(mPlugin.getConfig()));
+        mPlugin.log("DelayTicks: %s, %s", mDelayTicks, BWeatherManager.currentWeatherType.getConfigPrefix(mPlugin.getConfig()));
         return runTaskTimer(mPlugin, 0, mDelayTicks);
     }
 

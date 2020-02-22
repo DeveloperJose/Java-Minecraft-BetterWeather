@@ -16,7 +16,8 @@ import java.util.List;
 
 public class BWeatherCommand implements CommandExecutor, TabCompleter {
     private static final List<String> COMMANDS = ImmutableList.of("start", "clear", "reload", "help");
-    private static final List<String> WEATHER_TYPES = ImmutableList.of("clear", "hail",
+    private static final List<String> WEATHER_TYPES = ImmutableList.of(
+            "clear", "hail",
             "light-rain", "light-wind", "light-snow",
             "heavy-rain", "heavy-wind", "heavy-snow",
             "light-wind-light-rain", "heavy-wind-light-rain", "heavy-wind-heavy-rain", "thunderstorm",
@@ -84,11 +85,7 @@ public class BWeatherCommand implements CommandExecutor, TabCompleter {
             }
 
             // Change the weather
-            BWeather.changeWeather(mPlugin, newWeather, durationTicks);
-
-            // String broadcastMessage = String.format("[BWeather] Weather changed to %s for %s sec (%s min)", rawWeatherName, durationTicks / 20, durationTicks / 20 / 60);
-            // Command.broadcastCommandMessage(commandSender, broadcastMessage);
-            return true;
+            BWeatherManager.changeWeather(mPlugin, newWeather, durationTicks);
         }
         return true;
     }

@@ -10,52 +10,6 @@ import org.bukkit.entity.Player;
  * Base class for new weathers
  */
 public abstract class BWeatherType {
-    public static BWeatherType CLEAR = new Clear();
-    public static BWeatherType HAIL = new Hail();
-
-    public static BWeatherType HEAVY_RAIN = new HeavyRain();
-    public static BWeatherType LIGHT_RAIN = new LightRain();
-
-    public static BWeatherType HEAVY_SNOW = new HeavySnow();
-    public static BWeatherType LIGHT_SNOW = new LightSnow();
-
-    public static BWeatherType HEAVY_WIND = new HeavyWind();
-    public static BWeatherType LIGHT_WIND = new LightWind();
-
-    public static BWeatherType LIGHT_WIND_LIGHT_RAIN = new BWeatherTypePair(LIGHT_WIND, LIGHT_RAIN);
-    public static BWeatherType HEAVY_WIND_LIGHT_RAIN = new BWeatherTypePair(HEAVY_WIND, LIGHT_RAIN);
-    public static BWeatherType HEAVY_WIND_HEAVY_RAIN = new BWeatherTypePair(HEAVY_WIND, HEAVY_RAIN); // Alias: Thunderstorm
-
-    public static BWeatherType LIGHT_WIND_LIGHT_SNOW = new BWeatherTypePair(LIGHT_WIND, LIGHT_SNOW, Biome.ICE_SPIKES);
-    public static BWeatherType HEAVY_WIND_HEAVY_SNOW = new BWeatherTypePair(HEAVY_WIND, HEAVY_SNOW, Biome.ICE_SPIKES); // Alias: Blizzard
-
-    public static final BWeatherType[] ALL_TYPES = new BWeatherType[]{CLEAR, HAIL,
-            LIGHT_RAIN, LIGHT_WIND, LIGHT_SNOW,
-            HEAVY_RAIN, HEAVY_WIND, HEAVY_SNOW,
-            LIGHT_WIND_LIGHT_RAIN, HEAVY_WIND_LIGHT_RAIN, HEAVY_WIND_HEAVY_RAIN,
-            LIGHT_WIND_LIGHT_SNOW, HEAVY_WIND_HEAVY_SNOW
-    };
-
-    public static final BWeatherType[] AFTER_HAIL = new BWeatherType[]{CLEAR, HEAVY_RAIN, HEAVY_SNOW};
-
-    /**
-     * Converts a weather name string into a BWeatherType
-     *
-     * @param weatherName String containing the weather name
-     * @return The given BWeather or null if an invalid name is given
-     */
-    public static BWeatherType fromString(String weatherName) {
-        if (weatherName.equalsIgnoreCase("blizzard"))
-            return HEAVY_WIND_HEAVY_SNOW;
-        else if (weatherName.equalsIgnoreCase("thunderstorm"))
-            return HEAVY_WIND_HEAVY_RAIN;
-
-        for (BWeatherType w : BWeatherType.ALL_TYPES)
-            if (w.toString().equalsIgnoreCase(weatherName))
-                return w;
-        return null;
-    }
-
     /**
      * Transforms the world according to the weather
      *
@@ -70,10 +24,18 @@ public abstract class BWeatherType {
      * Only runs once, at the beginning of the weather change.
      *
      * @param p Player to change
-     * @param b Biome the player is in
      */
     public void initialPlayerEffect(Player p, Biome b) {
 
+    }
+
+    /**
+     * Checks if the weather is snowy
+     *
+     * @return True if the weather is indeed a snowy type
+     */
+    public boolean isSnowy() {
+        return this instanceof LightSnow;
     }
 
     /**
@@ -132,5 +94,23 @@ public abstract class BWeatherType {
         // Add the name of the weather
         configTag += toString();
         return configTag.toLowerCase();
+    }
+
+    /**
+     * Converts a weather name string into a BWeatherType
+     *
+     * @param weatherName String containing the weather name
+     * @return The given BWeather or null if an invalid name is given
+     */
+    public static BWeatherType fromString(String weatherName) {
+        if (weatherName.equalsIgnoreCase("blizzard"))
+            return BWeather.HEAVY_WIND_HEAVY_SNOW;
+        else if (weatherName.equalsIgnoreCase("thunderstorm"))
+            return BWeather.HEAVY_WIND_HEAVY_RAIN;
+
+        for (BWeatherType w : BWeather.ALL_TYPES)
+            if (w.toString().equalsIgnoreCase(weatherName))
+                return w;
+        return null;
     }
 }

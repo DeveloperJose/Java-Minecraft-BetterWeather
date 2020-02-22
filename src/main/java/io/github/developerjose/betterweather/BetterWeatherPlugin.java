@@ -12,7 +12,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  * BetterWeather plugin inspired by https://bukkit.org/threads/better-weather.482739/
@@ -47,24 +46,22 @@ public class BetterWeatherPlugin extends JavaPlugin implements Listener {
 
         // Clear weather and effects
         World w = getServer().getWorlds().get(0);
-        w.setStorm(false);
-        w.setThundering(false);
+        Util.clearWorldEffects(w);
 
-        for (Player p : w.getPlayers()) {
-            p.removePotionEffect(PotionEffectType.SLOW);
-            p.removePotionEffect(PotionEffectType.WEAKNESS);
-        }
+        for (Player p : w.getPlayers())
+            Util.clearPlayerEffects(p);
+        
     }
 
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent ev) {
         // Cancel the weather change if the plugin isn't the one who is changing it
-        ev.setCancelled(!BWeather.isPluginChangingWeather);
+        ev.setCancelled(!BWeatherManager.isPluginChangingWeather);
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent ev) {
-        boolean isHail = BWeather.currentType instanceof Hail;
+        boolean isHail = BWeatherManager.currentWeatherType instanceof Hail;
         if (!isHail)
             return;
 

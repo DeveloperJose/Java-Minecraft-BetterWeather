@@ -1,12 +1,13 @@
 package io.github.developerjose.betterweather.runnable;
 
-import io.github.developerjose.betterweather.BWeather;
+import io.github.developerjose.betterweather.BWeatherManager;
 import io.github.developerjose.betterweather.BetterWeatherPlugin;
 import io.github.developerjose.betterweather.Util;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -32,12 +33,12 @@ public class WindRunnable extends BukkitRunnable {
         mCurrentTicks = 0;
 
         // Get the duration and delay from the config
-        mDelayTicks = BWeather.currentType.getConfigEffectDelay(plugin.getConfig());
-        mDurationTicks = BWeather.currentType.getConfigEffectDuration(plugin.getConfig());
+        mDelayTicks = BWeatherManager.currentWeatherType.getConfigEffectDelay(plugin.getConfig());
+        mDurationTicks = BWeatherManager.currentWeatherType.getConfigEffectDuration(plugin.getConfig());
     }
 
     public BukkitTask runTask() {
-        mPlugin.log("[Wind]DelayTicks=%s, DurationTicks=%s, Prefix=%s", mDelayTicks, mDurationTicks, BWeather.currentType.getConfigPrefix(mPlugin.getConfig()));
+        mPlugin.log("[Wind]DelayTicks=%s, DurationTicks=%s, Prefix=%s", mDelayTicks, mDurationTicks, BWeatherManager.currentWeatherType.getConfigPrefix(mPlugin.getConfig()));
         return runTaskTimer(mPlugin, mDelayTicks, TICK_PERIOD);
     }
 
@@ -53,12 +54,19 @@ public class WindRunnable extends BukkitRunnable {
             if (Util.isPlayerUnderBlockCover(p))
                 continue;
 
+            // Don't apply the wind effect if it's snowy weather and the player isn't in ice_spikes
+            if (BWeatherManager.currentWeatherType.isSnowy()) {
+                Biome b = p.getLocation().getBlock().getBiome();
+                if (b != Biome.ICE_SPIKES)
+                    continue;
+            }
+
             // Push player
             Vector velocity = p.getVelocity();
-            p.setVelocity(velocity.add(BWeather.windDirection));
+            p.setVelocity(velocity.add(BWeatherManager.currentWindDirection));
 
             // Spawn particles
-            Location particleLoc = p.getLocation().subtract(BWeather.windDirection);
+            Location particleLoc = p.getLocation().subtract(BWeatherManager.currentWindDirection);
             particleLoc.setY(p.getEyeLocation().getY());
 
             for (int i = 0; i < 5; i++) {
@@ -69,7 +77,7 @@ public class WindRunnable extends BukkitRunnable {
                 p.spawnParticle(Particle.CLOUD,
                         particleLoc.getX() + sx, particleLoc.getY() + sy, particleLoc.getZ() + sz,
                         0,
-                        BWeather.windDirection.getX(), BWeather.windDirection.getY(), BWeather.windDirection.getZ(),
+                        BWeatherManager.currentWindDirection.getX(), BWeatherManager.currentWindDirection.getY(), BWeatherManager.currentWindDirection.getZ(),
                         mRand.nextInt(10) + 5);
             }
 

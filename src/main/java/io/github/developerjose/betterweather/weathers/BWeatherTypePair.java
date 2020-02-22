@@ -6,19 +6,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class BWeatherTypePair extends BWeatherType {
-
     private BWeatherType mWeather1;
     private BWeatherType mWeather2;
-    private Biome mAllowedBiome;
 
     public BWeatherTypePair(BWeatherType w1, BWeatherType w2) {
         mWeather1 = w1;
         mWeather2 = w2;
-    }
-
-    public BWeatherTypePair(BWeatherType w1, BWeatherType w2, Biome allowedBiome) {
-        this(w1, w2);
-        mAllowedBiome = allowedBiome;
     }
 
     @Override
@@ -29,16 +22,8 @@ public class BWeatherTypePair extends BWeatherType {
 
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
-        if (canApplyPlayerEffect(p, b)) {
-            mWeather1.initialPlayerEffect(p, b);
-            mWeather2.initialPlayerEffect(p, b);
-        }
-    }
-
-    private boolean canApplyPlayerEffect(Player p, Biome b) {
-        // Only allow effect if player is in the specified biome
-        // If no biome is set, then assume you can apply the effect
-        return (mAllowedBiome == null) || (mAllowedBiome == b);
+        mWeather1.initialPlayerEffect(p, b);
+        mWeather2.initialPlayerEffect(p, b);
     }
 
     @Override
@@ -54,5 +39,10 @@ public class BWeatherTypePair extends BWeatherType {
     @Override
     public int getConfigEffectDuration(FileConfiguration config) {
         return Math.max(mWeather1.getConfigEffectDuration(config), mWeather2.getConfigEffectDuration(config));
+    }
+
+    @Override
+    public boolean isSnowy() {
+        return mWeather2 instanceof LightSnow || mWeather1 instanceof LightSnow;
     }
 }

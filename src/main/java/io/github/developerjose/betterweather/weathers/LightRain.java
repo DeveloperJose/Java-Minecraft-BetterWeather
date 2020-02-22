@@ -1,6 +1,6 @@
 package io.github.developerjose.betterweather.weathers;
 
-import io.github.developerjose.betterweather.BWeather;
+import io.github.developerjose.betterweather.BWeatherManager;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
@@ -15,7 +15,7 @@ public class LightRain extends BWeatherType {
 
     @Override
     public void initialPlayerEffect(Player p, Biome b) {
-        p.addPotionEffect(BWeather.makePotionEffect(PotionEffectType.WEAKNESS, 1));
+        p.addPotionEffect(BWeatherManager.makePotionEffect(PotionEffectType.WEAKNESS, 1));
     }
 
     @Override
