@@ -5,6 +5,7 @@ import io.github.developerjose.betterweather.BetterWeatherPlugin;
 import io.github.developerjose.betterweather.Util;
 import io.github.developerjose.betterweather.weathers.BWeather;
 import io.github.developerjose.betterweather.weathers.BWeatherType;
+import io.github.developerjose.betterweather.weathers.Clear;
 import io.github.developerjose.betterweather.weathers.Hail;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,9 +26,14 @@ public class RandomWeatherChangeRunnable extends BukkitRunnable {
         // After hail, force the weather to change to one in the hail list
         // also force weather to change immediately
         BWeatherType previousType = BWeatherManager.currentWeatherType;
-        if (previousType instanceof Hail) {
+        boolean previousWasHail = previousType instanceof Hail;
+        boolean previousNotClear = !(previousType instanceof Clear);
+        if (previousWasHail) {
             newWeather = Util.getRandomElementFromArray(BWeather.AFTER_HAIL);
             durationTicks = 0;
+        }
+        else if (previousNotClear){
+            newWeather = BWeather.CLEAR;
         }
         BWeatherManager.changeWeather(mPlugin, newWeather, durationTicks);
     }
