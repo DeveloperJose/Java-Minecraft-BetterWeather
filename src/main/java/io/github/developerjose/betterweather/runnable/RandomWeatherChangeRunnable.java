@@ -23,16 +23,15 @@ public class RandomWeatherChangeRunnable extends BukkitRunnable {
         // Get the duration of that weather
         int durationTicks = newWeather.getConfigWeatherDuration(mPlugin.getConfig());
 
-        // After hail, force the weather to change to one in the hail list
-        // also force weather to change immediately
+        // After hail, force the weather to change to one in the hail list also force weather to change immediately
+        // After all weathers except hail, force change to clear
         BWeatherType previousType = BWeatherManager.currentWeatherType;
         boolean previousWasHail = previousType instanceof Hail;
         boolean previousNotClear = !(previousType instanceof Clear);
         if (previousWasHail) {
             newWeather = Util.getRandomElementFromArray(BWeather.AFTER_HAIL);
             durationTicks = 0;
-        }
-        else if (previousNotClear){
+        } else if (previousNotClear) {
             newWeather = BWeather.CLEAR;
         }
         BWeatherManager.changeWeather(mPlugin, newWeather, durationTicks);
